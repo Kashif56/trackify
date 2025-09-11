@@ -7,8 +7,8 @@ class ClientSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Client
-        fields = ['id', 'name', 'email', 'phone', 'address', 'company_name', 
-                 'notes', 'created_at', 'updated_at']
+        fields = ['id', 'name', 'email', 'phone_number', 'address', 'city', 'state',
+                 'zip_code', 'country', 'company_name', 'notes', 'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
     
     def create(self, validated_data):
@@ -23,6 +23,6 @@ class ClientDetailSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Client
-        fields = ['id', 'name', 'email', 'phone', 'address', 'company_name', 
-                 'notes', 'created_at', 'updated_at']
+        fields = ['id', 'name', 'email', 'phone_number', 'address', 'city', 'state',
+                 'zip_code', 'country', 'company_name', 'notes', 'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']

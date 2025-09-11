@@ -11,7 +11,8 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'email', 'username', 'first_name', 'last_name', 
-                 'company_name', 'phone_number', 'address', 'profile_picture']
+                 'company_name', 'phone_number', 'address', 'city', 'state',
+                 'country', 'zip_code', 'profile_picture']
         read_only_fields = ['id']
 
 
@@ -40,4 +41,5 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'company_name', 'phone_number', 'address', 'profile_picture']
+        fields = ['first_name', 'last_name', 'company_name', 'phone_number', 
+                 'address', 'city', 'state', 'country', 'zip_code', 'profile_picture']
