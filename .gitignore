@@ -1,0 +1,8 @@
+venv
+backend/venv
+client/node_modules
+client/.vscode
+client/.idea
+client/.DS_Store
+client/.gitignore
+client/.vscode
