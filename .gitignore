@@ -1,4 +1,9 @@
 venv
+.env
+.cpython-312
+.cpython
+backend/*.cpython
+backend/*.env
 backend/venv
 backend/*.pyc
 backend/__pycache__

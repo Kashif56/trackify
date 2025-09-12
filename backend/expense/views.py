@@ -42,6 +42,7 @@ class ExpenseView(APIView):
             try:
                 expense = get_object_or_404(Expense, id=expense_id, user=request.user)
                 serializer = ExpenseDetailSerializer(expense)
+                print(serializer.data)
                 return Response(serializer.data)
             except Exception as e:
                 return Response({'error': str(e)}, status=status.HTTP_404_NOT_FOUND)

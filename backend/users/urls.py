@@ -9,8 +9,15 @@ urlpatterns = [
     path('login/', views.login_user, name='login'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     
+    # Email verification
+    path('verify-email/<uuid:token>/', views.verify_email, name='verify_email'),
+    path('resend-verification/', views.resend_verification_email, name='resend_verification'),
+    
     # User profile
     path('profile/', views.get_user_profile, name='user_profile'),
     path('profile/update/', views.update_user_profile, name='update_user_profile'),
     path('profile/details/', views.get_user_details, name='user_details'),
+    
+    # Dashboard
+    path('dashboard/', views.get_dashboard_data, name='dashboard_data'),
 ]

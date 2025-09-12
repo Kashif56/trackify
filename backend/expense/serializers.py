@@ -39,6 +39,7 @@ class ExpenseDetailSerializer(serializers.ModelSerializer):
     category = ExpenseCategorySerializer(read_only=True)
     
     class Meta:
+        depth = 1
         model = Expense
         fields = ['id', 'category', 'amount', 'date', 'description', 
                  'notes', 'receipt', 'created_at', 'updated_at']

@@ -2,11 +2,19 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, ChevronDown, Sun, Moon } from 'lucide-react';
 import { Link as ScrollLink } from 'react-scroll';
+import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../redux/slices/userSlice.js';
+import { toast } from 'react-toastify';
 
 const Navbar = () => {
   const [isMenuOpen, set_is_menu_open] = useState(false);
   const [scrolled, set_scrolled] = useState(false);
-  const [darkMode, set_dark_mode] = useState(false);
+
+  const { user, tokens } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,10 +34,12 @@ const Navbar = () => {
     set_is_menu_open(!isMenuOpen);
   };
 
-  const toggleDarkMode = () => {
-    const newDarkMode = !darkMode;
-    set_dark_mode(newDarkMode);
-    document.documentElement.classList.toggle('dark', newDarkMode);
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('tokens');
+    dispatch(logout());
+    toast.success('Logged out successfully');
+    
   };
 
   return (
@@ -59,21 +69,29 @@ const Navbar = () => {
             <Link to="/contact" className="text-[#1F2937] hover:text-[#F97316] px-3 py-2 text-sm font-medium transition-colors duration-200">
               Contact
             </Link>
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={toggleDarkMode}
-                className="p-2 rounded-full text-[#1F2937] hover:bg-[#F9FAFB] transition-colors duration-200"
-                aria-label="Toggle dark mode"
-              >
-                {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-              </button>
-              <Link to="/login" className="text-[#F97316] hover:text-[#EA580C] px-3 py-2 text-sm font-medium transition-colors duration-200">
-                Login
-              </Link>
-              <Link to="/register" className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 transform hover:scale-105 hover:shadow-md">
-                Register
-              </Link>
+
+            {tokens.access ? (
+              <div className="flex items-center space-x-4">
+                <Link to="/dashboard" className="text-[#F97316] hover:text-[#EA580C] px-3 py-2 text-sm font-medium transition-colors duration-200">
+                  Dashboard
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 transform hover:scale-105 hover:shadow-md"
+                >
+                  Logout
+                </button>
             </div>
+            ) : ( <div className="flex items-center space-x-4">
+                  <Link to="/login" className="text-[#F97316] hover:text-[#EA580C] px-3 py-2 text-sm font-medium transition-colors duration-200">
+                    Login
+                </Link>
+                <Link to="/register" className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 transform hover:scale-105 hover:shadow-md">
+                  Register
+                </Link>
+              </div>)}
+
+
           </div>
           
           {/* Mobile menu button */}
