@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 from clients.models import Client
 import uuid
 
@@ -15,8 +16,8 @@ class Invoice(models.Model):
     
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='invoices')
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='invoices')
-    invoice_number = models.CharField(max_length=50)
-    issue_date = models.DateField()
+    invoice_number = models.CharField(max_length=50, unique=True, blank=True)
+    issue_date = models.DateField(default=timezone.now)
     due_date = models.DateField()
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='unpaid')
     notes = models.TextField(blank=True)
@@ -30,6 +31,34 @@ class Invoice(models.Model):
     
     def __str__(self):
         return f"Invoice #{self.invoice_number} - {self.client.name}"
+    
+    def save(self, *args, **kwargs):
+        # Generate invoice number if not provided
+        if not self.invoice_number:
+            # Format: INV-YEAR-MONTH-XXXX (e.g., INV-2025-09-0001)
+            today = timezone.now()
+            year_month = today.strftime('%Y-%m')
+            
+            # Get the latest invoice number for this user and month
+            latest_invoice = Invoice.objects.filter(
+                user=self.user,
+                invoice_number__startswith=f'INV-{year_month}'
+            ).order_by('-invoice_number').first()
+            
+            if latest_invoice:
+                # Extract the last number and increment
+                try:
+                    last_number = int(latest_invoice.invoice_number.split('-')[-1])
+                    next_number = last_number + 1
+                except (ValueError, IndexError):
+                    next_number = 1
+            else:
+                next_number = 1
+            
+            # Create the new invoice number
+            self.invoice_number = f'INV-{year_month}-{next_number:04d}'
+        
+        super().save(*args, **kwargs)
     
     class Meta:
         ordering = ['-created_at']

@@ -1,11 +1,13 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
-from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from subscription.models import Plan, Subscription
 
 
-class User(AbstractUser):
-    """Custom user model for Trackify"""
+class UserProfile(models.Model):
+    """Profile model for extending the User model"""
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     company_name = models.CharField(max_length=255, blank=True)
     phone_number = models.CharField(max_length=20, blank=True)
     address = models.TextField(blank=True)
@@ -15,18 +17,22 @@ class User(AbstractUser):
     zip_code = models.CharField(null=True, blank=True, max_length=20)
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
     
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
-    
     def __str__(self):
-        return self.email
+        return self.user.email
     
     def is_user_valid_for_trial(self):
-        subscription = Subscription.objects.filter(user=self, plan__name='Trial').exists()
+        subscription = Subscription.objects.filter(user=self.user, plan__name='Trial').exists()
+        return not subscription
 
-        if subscription:
-            return False
-        else:
-            return True
-        
 
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    """Create a UserProfile instance when a new User is created"""
+    if created:
+        UserProfile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    """Save the UserProfile instance when the User is saved"""
+    instance.profile.save()

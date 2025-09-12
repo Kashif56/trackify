@@ -6,3 +6,5 @@ client/.idea
 client/.DS_Store
 client/.gitignore
 client/.vscode
+client/*.pyc
+client/__pycache__

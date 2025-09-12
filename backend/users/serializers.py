@@ -1,18 +1,25 @@
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
+from .models import UserProfile
 
-User = get_user_model()
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    """Serializer for the UserProfile model"""
+    
+    class Meta:
+        model = UserProfile
+        fields = ['company_name', 'phone_number', 'address', 'city', 'state',
+                 'country', 'zip_code', 'profile_picture']
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """Serializer for the User model"""
+    """Serializer for the User model with profile data"""
+    profile = UserProfileSerializer(read_only=True)
     
     class Meta:
         model = User
-        fields = ['id', 'email', 'username', 'first_name', 'last_name', 
-                 'company_name', 'phone_number', 'address', 'city', 'state',
-                 'country', 'zip_code', 'profile_picture']
+        fields = ['id', 'email', 'username', 'first_name', 'last_name', 'profile']
         read_only_fields = ['id']
 
 
@@ -37,9 +44,17 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
-    """Serializer for updating user profile"""
+    """Serializer for updating user data"""
     
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'company_name', 'phone_number', 
-                 'address', 'city', 'state', 'country', 'zip_code', 'profile_picture']
+        fields = ['first_name', 'last_name']
+
+
+class UserProfileUpdateSerializer(serializers.ModelSerializer):
+    """Serializer for updating user profile data"""
+    
+    class Meta:
+        model = UserProfile
+        fields = ['company_name', 'phone_number', 'address', 'city', 'state',
+                 'country', 'zip_code', 'profile_picture']

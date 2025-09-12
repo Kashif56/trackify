@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Invoice, InvoiceItem
 from clients.serializers import ClientSerializer
+from clients.models import Client
 
 
 class InvoiceItemSerializer(serializers.ModelSerializer):
@@ -22,7 +23,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
         fields = ['id', 'invoice_number', 'client', 'client_name', 'issue_date', 
                  'due_date', 'status', 'notes', 'subtotal', 'tax_rate', 
                  'tax_amount', 'total', 'items', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'subtotal', 'tax_amount', 'total', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'invoice_number', 'subtotal', 'tax_amount', 'total', 'created_at', 'updated_at']
     
     def create(self, validated_data):
         # Associate the invoice with the current user
@@ -34,19 +35,31 @@ class InvoiceSerializer(serializers.ModelSerializer):
 class InvoiceDetailSerializer(serializers.ModelSerializer):
     """Serializer for detailed invoice information"""
     items = InvoiceItemSerializer(many=True)
-    client = ClientSerializer(read_only=True)
+    client_details = ClientSerializer(source='client', read_only=True)
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filter clients to only show those belonging to the current user
+        if 'context' in kwargs and 'request' in kwargs['context']:
+            user = kwargs['context']['request'].user
+            self.fields['client'] = serializers.PrimaryKeyRelatedField(
+                queryset=Client.objects.filter(user=user)
+            )
+    
+    client = serializers.PrimaryKeyRelatedField(queryset=Client.objects.none())
     
     class Meta:
         model = Invoice
-        fields = ['id', 'invoice_number', 'client', 'issue_date', 'due_date', 
+        fields = ['id', 'invoice_number', 'client', 'client_details', 'issue_date', 'due_date', 
                  'status', 'notes', 'subtotal', 'tax_rate', 'tax_amount', 
                  'total', 'items', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'subtotal', 'tax_amount', 'total', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'invoice_number', 'subtotal', 'tax_amount', 'total', 'created_at', 'updated_at']
     
     def create(self, validated_data):
         items_data = validated_data.pop('items')
         user = self.context['request'].user
         invoice = Invoice.objects.create(user=user, **validated_data)
+
         
         for item_data in items_data:
             InvoiceItem.objects.create(invoice=invoice, **item_data)

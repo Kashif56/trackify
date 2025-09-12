@@ -165,3 +165,5 @@ CORS_ALLOW_CREDENTIALS = True
 # Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+
