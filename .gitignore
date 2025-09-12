@@ -1,5 +1,9 @@
 venv
 backend/venv
+backend/*.pyc
+backend/__pycache__
+__pycache__
+*.pyc
 client/node_modules
 client/.vscode
 client/.idea
