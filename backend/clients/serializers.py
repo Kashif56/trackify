@@ -10,6 +10,7 @@ class ClientSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'email', 'phone_number', 'address', 'city', 'state',
                  'zip_code', 'country', 'company_name', 'notes', 'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
+        depth = 1
     
     def create(self, validated_data):
         # Associate the client with the current user
@@ -22,6 +23,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
     """Serializer for detailed client information"""
     
     class Meta:
+        depth = 1
         model = Client
         fields = ['id', 'name', 'email', 'phone_number', 'address', 'city', 'state',
                  'zip_code', 'country', 'company_name', 'notes', 'created_at', 'updated_at']

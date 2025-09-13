@@ -134,29 +134,23 @@ const Dashboard = () => {
           <StatCard 
             title="Total Income" 
             value={`$${stats.totalIncome.toFixed(2)}`} 
-            icon={DollarSign}
-            iconBgColor="bg-[#22C55E]"
-            trend={stats.incomeTrend > 0 ? "up" : stats.incomeTrend < 0 ? "down" : null}
-            trendValue={`${Math.abs(stats.incomeTrend || 0).toFixed(1)}%`}
-            trendLabel="vs last month"
+            icon={<DollarSign />}
+            subtitle={`${recentInvoices.length} invoices`}
+            color="green"
           />
           <StatCard 
             title="Total Expenses" 
             value={`$${stats.totalExpenses.toFixed(2)}`} 
-            icon={CreditCard}
-            iconBgColor="bg-[#EF4444]"
-            trend={stats.expenseTrend > 0 ? "up" : stats.expenseTrend < 0 ? "down" : null}
-            trendValue={`${Math.abs(stats.expenseTrend || 0).toFixed(1)}%`}
-            trendLabel="vs last month"
+            icon={<CreditCard />}
+            subtitle={`${recentExpenses.length} expenses`}
+            color="red"
           />
           <StatCard 
             title="Balance" 
             value={`$${stats.balance.toFixed(2)}`} 
-            icon={TrendingUp}
-            iconBgColor="bg-[#F97316]"
-            trend={stats.balanceTrend > 0 ? "up" : stats.balanceTrend < 0 ? "down" : null}
-            trendValue={`${Math.abs(stats.balanceTrend || 0).toFixed(1)}%`}
-            trendLabel="vs last month"
+            icon={<TrendingUp />}
+            subtitle="Current balance"
+            color="primary"
           />
         </div>
         
@@ -169,6 +163,7 @@ const Dashboard = () => {
             onEditInvoice={handleEditInvoice}
             onDeleteInvoice={handleDeleteInvoice}
             onDownloadInvoice={handleDownloadInvoice}
+            isFullPage={false}
           />
           <ExpensesTable 
             expenses={recentExpenses}

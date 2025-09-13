@@ -5,6 +5,9 @@ import { ToastContainer } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
 
+// Test Components
+import InvoiceTemplateTest from './components/Dashboard/InvoiceTemplateTest';
+
 // Core Pages
 import LandingPage from './pages/core/LandingPage';
 import FeaturesPage from './pages/core/FeaturesPage';
@@ -19,6 +22,13 @@ import VerifyEmail from './pages/users/VerifyEmail';
 // Dashboard Pages
 import Dashboard from './pages/dashboard/Dashboard';
 import ExpensesPage from './pages/dashboard/ExpensesPage';
+import ClientsPage from './pages/dashboard/clients/ClientsPage';
+
+// Invoice Pages
+import InvoicesPage from './pages/dashboard/invoices/InvoicesPage';
+import AddInvoicePage from './pages/dashboard/invoices/AddInvoicePage';
+import EditInvoicePage from './pages/dashboard/invoices/EditInvoicePage';
+import InvoiceDetailPage from './pages/dashboard/invoices/InvoiceDetailPage';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -52,6 +62,40 @@ function App() {
           <ProtectedRoute>
             <ExpensesPage />
           </ProtectedRoute>
+        } />
+        
+        {/* Clients Route */}
+        <Route path="/clients" element={
+          <ProtectedRoute>
+            <ClientsPage />
+          </ProtectedRoute>
+        } />
+        
+        {/* Invoice Routes */}
+        <Route path="/invoices" element={
+          <ProtectedRoute>
+            <InvoicesPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/invoices/add" element={
+          <ProtectedRoute>
+            <AddInvoicePage />
+          </ProtectedRoute>
+        } />
+        <Route path="/invoices/:id" element={
+          <ProtectedRoute>
+            <InvoiceDetailPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/invoices/edit/:id" element={
+          <ProtectedRoute>
+            <EditInvoicePage />
+          </ProtectedRoute>
+        } />
+        
+        {/* Test Routes */}
+        <Route path="/test/invoice-template" element={
+          <InvoiceTemplateTest />
         } />
       </Routes>
     </HelmetProvider>

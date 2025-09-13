@@ -177,7 +177,7 @@ const ExpensesPage = () => {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
+      <div className={`space-y-6 ${showAddModal || showEditModal || showDeleteModal || showAddCategoryModal || showEditCategoryModal || showDeleteCategoryModal ? 'pointer-events-none' : ''}`}>
         {/* Page Header */}
         <div className="sm:flex sm:items-center sm:justify-between">
           <h1 className="text-2xl font-semibold text-gray-900">Expenses</h1>

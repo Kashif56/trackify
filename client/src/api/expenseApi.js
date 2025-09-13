@@ -99,7 +99,7 @@ const expenseApi = {
           }
         });
         
-        const response = await axiosInstance.put(`/expense/${id}/`, formData, {
+        const response = await axiosInstance.patch(`/expense/${id}/`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -107,7 +107,7 @@ const expenseApi = {
         return response.data;
       } else {
         // Regular JSON request if no file is included
-        const response = await axiosInstance.put(`/expense/${id}/`, expenseData);
+        const response = await axiosInstance.patch(`/expense/${id}/`, expenseData);
         return response.data;
       }
     } catch (error) {

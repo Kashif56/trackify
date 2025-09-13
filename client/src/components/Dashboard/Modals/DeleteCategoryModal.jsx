@@ -21,7 +21,7 @@ const DeleteCategoryModal = ({ isOpen, onClose, onConfirm, category }) => {
   };
   
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-gray-500 bg-opacity-75 transition-opacity" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div className="fixed inset-0 z-50 overflow-y-auto backdrop-blur-xs transition-opacity" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:p-0">
         {/* Modal panel */}
         <div className="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">

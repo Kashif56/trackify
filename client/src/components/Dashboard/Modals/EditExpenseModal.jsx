@@ -31,25 +31,43 @@ const EditExpenseModal = ({ isOpen, onClose, onSave, expense, categories = [] })
   
   // Initialize form data when expense changes
   useEffect(() => {
-    if (expense) {
-      setFormData({
+    if (expense && categories.length > 0) {
+      
+      // Find the matching category from the categories list
+      // This is important because we need to match the exact ID format that's in the options
+      let categoryId = '';
+      
+      // First try to find the category by ID if we have it
+      if (expense.category) {
+        
+        if (typeof expense.category === 'object' && expense.category.id) {
+          // If we have a category object with ID
+          const matchingCategory = categories.find(cat => String(cat.id) === String(expense.category.id));
+          if (matchingCategory) {
+            categoryId = matchingCategory.id;
+          }
+        } else if (typeof expense.category === 'string' || typeof expense.category === 'number') {
+          // If we have a category string or number ID
+          const matchingCategory = categories.find(cat => String(cat.id) === String(expense.category));
+          if (matchingCategory) {
+            categoryId = matchingCategory.id;
+          }
+        }
+      }
+      
+      const newFormData = {
         id: expense.id,
         description: expense.description || '',
-        category: expense.category?.id || '',
+        category: categoryId, // Store the category ID for proper selection
         amount: expense.amount || '',
         date: expense.date || new Date().toISOString().split('T')[0],
         notes: expense.notes || '',
         receipt: expense.receipt || null
-      });
+      };
       
-      // Set receipt preview if available
-      if (expense.receipt && expense.receipt.startsWith('http')) {
-        setReceiptPreview(expense.receipt);
-      } else {
-        setReceiptPreview('');
-      }
+      setFormData(newFormData);
     }
-  }, [expense]);
+  }, [expense, categories]);
   
   // Focus first input when modal opens
   useEffect(() => {
@@ -109,11 +127,52 @@ const EditExpenseModal = ({ isOpen, onClose, onSave, expense, categories = [] })
     setErrors({ ...errors, receipt: '' });
   };
   
-  // Remove receipt file
+  // Handle remove receipt file
   const handleRemoveReceipt = () => {
     setReceiptFile(null);
     setReceiptPreview('');
     setFormData({ ...formData, receipt: null });
+  };
+  
+  // Get receipt display URL
+  const getReceiptDisplayUrl = () => {
+    if (receiptPreview) {
+      return receiptPreview;
+    }
+    
+    if (formData.receipt) {
+      if (typeof formData.receipt === 'object' && formData.receipt.url) {
+        return formData.receipt.url;
+      }
+      if (typeof formData.receipt === 'string' && formData.receipt.startsWith('http')) {
+        return formData.receipt;
+      }
+    }
+    
+    return '';
+  };
+  
+  // Check if receipt is a PDF
+  const isPdfReceipt = () => {
+    const url = getReceiptDisplayUrl();
+    return url && (url.toLowerCase().endsWith('.pdf') || 
+           (formData.receipt instanceof File && formData.receipt.type === 'application/pdf'));
+  };
+  
+  // Get receipt filename for display
+  const getReceiptFilename = () => {
+    if (formData.receipt instanceof File) {
+      return formData.receipt.name;
+    }
+    
+    const url = getReceiptDisplayUrl();
+    if (url) {
+      // Extract filename from URL
+      const parts = url.split('/');
+      return parts[parts.length - 1];
+    }
+    
+    return 'Receipt';
   };
   
   // Validate form before submission
@@ -166,12 +225,12 @@ const EditExpenseModal = ({ isOpen, onClose, onSave, expense, categories = [] })
   if (!isOpen) return null;
   
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-gray-500 bg-opacity-75 transition-opacity" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div className="fixed inset-0 z-50 overflow-y-auto backdrop-blur-xs transition-opacity" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:p-0">
         {/* Background overlay - already included in parent div */}
         
         {/* Modal panel */}
-        <div className="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+        <div className="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 max-h-[90vh] overflow-y-auto">
             <div className="sm:flex sm:items-start">
               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
@@ -190,47 +249,53 @@ const EditExpenseModal = ({ isOpen, onClose, onSave, expense, categories = [] })
                 </div>
                 
                 <form onSubmit={handleSubmit} className="space-y-5">
-                  {/* Description */}
-                  <div>
-                    <label htmlFor="edit-expense-description" className="block text-sm font-medium text-gray-700 mb-1">
-                      Description *
-                    </label>
-                    <input
-                      type="text"
-                      name="description"
-                      id="edit-expense-description"
-                      value={formData.description}
-                      onChange={handleChange}
-                      className={`mt-1 block w-full border ${errors.description ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#F97316] focus:border-[#F97316]`}
-                      placeholder="e.g., Office Supplies"
-                    />
-                    {errors.description && (
-                      <p className="mt-1 text-sm text-red-600">{errors.description}</p>
-                    )}
-                  </div>
-                  
-                  {/* Category */}
-                  <div>
-                    <label htmlFor="edit-expense-category" className="block text-sm font-medium text-gray-700 mb-1">
-                      Category *
-                    </label>
-                    <select
-                      name="category"
-                      id="edit-expense-category"
-                      value={formData.category}
-                      onChange={handleChange}
-                      className={`mt-1 block w-full border ${errors.category ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#F97316] focus:border-[#F97316]`}
-                    >
-                      <option value="">Select a category</option>
-                      {Array.isArray(categories) && categories.map((category) => (
-                        <option key={category.id} value={category.id}>
-                          {category.name}
-                        </option>
-                      ))}
-                    </select>
-                    {errors.category && (
-                      <p className="mt-1 text-sm text-red-600">{errors.category}</p>
-                    )}
+                  {/* Description and Category (side by side) */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="edit-expense-description" className="block text-sm font-medium text-gray-700 mb-1">
+                        Description *
+                      </label>
+                      <input
+                        type="text"
+                        name="description"
+                        id="edit-expense-description"
+                        value={formData.description}
+                        onChange={handleChange}
+                        className={`mt-1 block w-full border ${errors.description ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#F97316] focus:border-[#F97316]`}
+                        placeholder="e.g., Office Supplies"
+                      />
+                      {errors.description && (
+                        <p className="mt-1 text-sm text-red-600">{errors.description}</p>
+                      )}
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="edit-expense-category" className="block text-sm font-medium text-gray-700 mb-1">
+                        Category *
+                      </label>
+                      <select
+                        name="category"
+                        id="edit-expense-category"
+                        value={formData.category || ''}
+                        onChange={handleChange}
+                        className={`mt-1 block w-full border ${errors.category ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#F97316] focus:border-[#F97316]`}
+                      >
+                        <option value="">Select a category</option>
+                        
+                        {Array.isArray(categories) && categories.map((category) => (
+                          <option
+                            key={category.id}
+                            value={String(category.id)}
+                          >
+                            {category.name}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.category && (
+                        <p className="mt-1 text-sm text-red-600">{errors.category}</p>
+                      )}
+                    </div>
+
                   </div>
                   
                   {/* Amount and Date (side by side on larger screens) */}
@@ -295,7 +360,7 @@ const EditExpenseModal = ({ isOpen, onClose, onSave, expense, categories = [] })
                       Receipt
                     </label>
                     
-                    {!formData.receipt ? (
+                    {!formData.receipt && !receiptPreview ? (
                       <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-[#F97316] hover:bg-orange-50 transition-colors duration-200 cursor-pointer">
                         <div className="space-y-1 text-center">
                           <Upload className="mx-auto h-12 w-12 text-gray-400 group-hover:text-[#F97316] transition-colors duration-200" />
@@ -320,29 +385,42 @@ const EditExpenseModal = ({ isOpen, onClose, onSave, expense, categories = [] })
                       </div>
                     ) : (
                       <div className="mt-1 flex items-center">
-                        {receiptPreview ? (
-                          <div className="relative group">
-                            <img
-                              src={receiptPreview}
-                              alt="Receipt preview"
-                              className="h-32 w-auto object-cover rounded-md shadow-sm group-hover:shadow-md transition-shadow duration-200"
-                            />
-                            <button
-                              type="button"
-                              onClick={handleRemoveReceipt}
-                              className="absolute -top-2 -right-2 bg-white rounded-full p-1 text-gray-500 hover:text-red-500 focus:outline-none shadow-sm hover:shadow-md transition-all duration-200"
-                            >
-                              <X className="h-4 w-4" />
-                            </button>
+                        {getReceiptDisplayUrl() ? (
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 h-10 w-10 bg-gray-100 rounded-md flex items-center justify-center">
+                              <span className="text-xs text-gray-500">File</span>
+                            </div>
+                            <div className="ml-3 flex-1 flex justify-between items-center">
+                              <div className="flex flex-col">
+                                <span className="text-sm text-gray-700 truncate">
+                                  {getReceiptFilename()}
+                                </span>
+                                <a 
+                                  href={getReceiptDisplayUrl()} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="text-xs text-[#F97316] hover:text-[#EA580C] transition-colors duration-200"
+                                >
+                                  View Receipt
+                                </a>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={handleRemoveReceipt}
+                                className="ml-3 flex-shrink-0 text-gray-400 hover:text-red-500"
+                              >
+                                <X className="h-4 w-4" />
+                              </button>
+                            </div>
                           </div>
                         ) : (
                           <div className="flex items-center">
                             <div className="flex-shrink-0 h-10 w-10 bg-gray-100 rounded-md flex items-center justify-center">
-                              <span className="text-xs text-gray-500">PDF</span>
+                              <span className="text-xs text-gray-500">No File</span>
                             </div>
                             <div className="ml-3 flex-1 flex justify-between items-center">
                               <span className="text-sm text-gray-500 truncate">
-                                {formData.receipt instanceof File ? formData.receipt.name : formData.receipt}
+                                No receipt attached
                               </span>
                               <button
                                 type="button"

@@ -11,3 +11,23 @@
     --color-status-success: #10B981;
     --color-status-warning: #FBBF24;
   }
+
+@media print {
+  /* Hide everything by default */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Show the printable invoice template and its children */
+  #printable-invoice, #printable-invoice * {
+    visibility: visible;
+  }
+
+  /* Position the printable invoice at the top of the page */
+  #printable-invoice {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+}

@@ -142,10 +142,10 @@ const AddExpenseModal = ({ isOpen, onClose, onSave, categories = [] }) => {
   if (!isOpen) return null;
   
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-gray-500 bg-opacity-75 transition-opacity" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div className="fixed inset-0 z-50 overflow-y-auto transition-opacity backdrop-blur-xs" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:p-0">
         {/* Modal panel */}
-        <div className="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+        <div className="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 max-h-[90vh] overflow-y-auto">
             <div className="sm:flex sm:items-start">
               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
@@ -164,47 +164,48 @@ const AddExpenseModal = ({ isOpen, onClose, onSave, categories = [] }) => {
                 </div>
                 
                 <form onSubmit={handleSubmit} className="space-y-5">
-                  {/* Description */}
-                  <div>
-                    <label htmlFor="expense-description" className="block text-sm font-medium text-gray-700 mb-1">
-                      Description *
-                    </label>
-                    <input
-                      type="text"
-                      name="description"
-                      id="expense-description"
-                      value={formData.description}
-                      onChange={handleChange}
-                      className={`mt-1 block w-full border ${errors.description ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#F97316] focus:border-[#F97316]`}
-                      placeholder="e.g., Office Supplies"
-                    />
-                    {errors.description && (
-                      <p className="mt-1 text-sm text-red-600">{errors.description}</p>
-                    )}
-                  </div>
-                  
-                  {/* Category */}
-                  <div>
-                    <label htmlFor="expense-category" className="block text-sm font-medium text-gray-700 mb-1">
-                      Category *
-                    </label>
-                    <select
-                      name="category"
-                      id="expense-category"
-                      value={formData.category}
-                      onChange={handleChange}
-                      className={`mt-1 block w-full border ${errors.category ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#F97316] focus:border-[#F97316]`}
-                    >
-                      <option value="">Select a category</option>
-                      {Array.isArray(categories) && categories.map((category) => (
-                        <option key={category.id} value={category.id}>
-                          {category.name}
-                        </option>
-                      ))}
-                    </select>
-                    {errors.category && (
-                      <p className="mt-1 text-sm text-red-600">{errors.category}</p>
-                    )}
+                  {/* Description and Category (side by side) */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="expense-description" className="block text-sm font-medium text-gray-700 mb-1">
+                        Description *
+                      </label>
+                      <input
+                        type="text"
+                        name="description"
+                        id="expense-description"
+                        value={formData.description}
+                        onChange={handleChange}
+                        className={`mt-1 block w-full border ${errors.description ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#F97316] focus:border-[#F97316]`}
+                        placeholder="e.g., Office Supplies"
+                      />
+                      {errors.description && (
+                        <p className="mt-1 text-sm text-red-600">{errors.description}</p>
+                      )}
+                    </div>
+                    
+                    <div>
+                      <label htmlFor="expense-category" className="block text-sm font-medium text-gray-700 mb-1">
+                        Category *
+                      </label>
+                      <select
+                        name="category"
+                        id="expense-category"
+                        value={formData.category}
+                        onChange={handleChange}
+                        className={`mt-1 block w-full border ${errors.category ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#F97316] focus:border-[#F97316]`}
+                      >
+                        <option value="">Select a category</option>
+                        {Array.isArray(categories) && categories.map((category) => (
+                          <option key={category.id} value={category.id}>
+                            {category.name}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.category && (
+                        <p className="mt-1 text-sm text-red-600">{errors.category}</p>
+                      )}
+                    </div>
                   </div>
                   
                   {/* Amount and Date (side by side on larger screens) */}

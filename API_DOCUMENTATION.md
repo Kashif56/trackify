@@ -311,6 +311,8 @@ Authorization: Bearer <your_access_token>
     "issue_date": "2025-09-12",
     "due_date": "2025-10-12",
     "notes": "Invoice notes",
+    "payment_terms": "Payment due within 14 days of issue",
+    "conditions": "Terms and conditions for this invoice",
     "tax_rate": 10.0,
     "items": [
       {

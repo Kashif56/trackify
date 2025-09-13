@@ -6,6 +6,7 @@ class ExpenseCategorySerializer(serializers.ModelSerializer):
     """Serializer for expense categories"""
     
     class Meta:
+        depth=1
         model = ExpenseCategory
         fields = ['id', 'name', 'description', 'created_at']
         read_only_fields = ['id', 'created_at']

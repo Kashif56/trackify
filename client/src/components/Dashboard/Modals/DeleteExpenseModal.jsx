@@ -21,7 +21,7 @@ const DeleteExpenseModal = ({ isOpen, onClose, onConfirm, expense }) => {
   };
   
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-gray-500 bg-opacity-75 transition-opacity" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div className="fixed inset-0 z-50 overflow-y-auto backdrop-blur-xs transition-opacity" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:p-0">
         {/* Background overlay - already included in parent div */}
         

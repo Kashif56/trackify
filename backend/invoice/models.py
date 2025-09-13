@@ -21,6 +21,8 @@ class Invoice(models.Model):
     due_date = models.DateField()
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='unpaid')
     notes = models.TextField(blank=True)
+    payment_terms = models.CharField(max_length=255, blank=True, default='Payment due within 14 days of issue')
+    conditions = models.TextField(blank=True, help_text='Terms and conditions for this invoice')
     subtotal = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     tax_rate = models.DecimalField(max_digits=5, decimal_places=2, default=0)
     tax_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
