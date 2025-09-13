@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { PDFDownloadLink, PDFViewer, pdf } from '@react-pdf/renderer';
+import { saveAs } from 'file-saver';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
@@ -9,6 +11,7 @@ import { toast } from 'react-toastify';
 import DashboardLayout from '../../../layout/DashboardLayout';
 import invoiceService from '../../../api/invoiceService';
 import InvoiceTemplate from '../../../components/Dashboard/InvoiceTemplate';
+import InvoicePDF from '../../../components/Dashboard/InvoicePDF';
 import { renderStatusBadge } from '../../../utils/invoiceUtils.jsx';
 
 /**
@@ -30,6 +33,7 @@ const InvoiceDetailPage = () => {
   const [invoice, setInvoice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [generatingPDF, setGeneratingPDF] = useState(false);
 
   // Fetch invoice on component mount
   useEffect(() => {
@@ -56,7 +60,7 @@ const InvoiceDetailPage = () => {
   const handleMarkAsPaid = async () => {
     try {
       setLoading(true);
-      await invoiceService.updateInvoiceStatus(id, 'paid');
+      await invoiceService.updateInvoice(id, { status: 'paid' });
       // Update the invoice in state
       setInvoice(prev => ({ ...prev, status: 'paid' }));
       toast.success(`Invoice ${invoice.invoice_number} marked as paid`);
@@ -72,9 +76,37 @@ const InvoiceDetailPage = () => {
     toast.success(`Reminder sent to ${invoice.client.name}`);
   };
 
-  const handleDownload = () => {
-    // This would be implemented with a PDF generation library
-    toast.info(`Downloading invoice ${invoice.invoice_number}...`);
+  const handleDownload = async () => {
+    try {
+      setGeneratingPDF(true);
+      toast.info(`Preparing invoice ${invoice.invoice_number} for download...`);
+      
+      // Generate PDF blob
+      const blob = await pdf(
+        <InvoicePDF 
+          invoice={invoice} 
+          user={invoice.user} 
+          client={invoice.client_details}
+          bankDetails={{
+            accountName: invoice.user?.company_name || 'Your Company Account',
+            accountNumber: invoice.user?.bank_account || 'XXXX-XXXX-XXXX-XXXX',
+            bankName: invoice.user?.bank_name || 'Your Bank Name',
+            swiftCode: invoice.user?.swift_code || 'SWIFTCODE',
+            routingNumber: invoice.user?.routing_number || '123456789'
+          }}
+        />
+      ).toBlob();
+      
+      // Save the PDF file
+      saveAs(blob, `Invoice-${invoice.invoice_number}.pdf`);
+      
+
+    } catch (err) {
+      console.error('PDF download error:', err);
+      toast.error('Failed to download invoice. Please try again.');
+    } finally {
+      setGeneratingPDF(false);
+    }
   };
 
   const handlePrint = () => {
@@ -82,7 +114,7 @@ const InvoiceDetailPage = () => {
   };
 
   // Get user preferences for dark mode
-  const darkMode = true
+  const darkMode = false
 
   if (loading) {
     return (
@@ -164,11 +196,12 @@ const InvoiceDetailPage = () => {
             </button>
             <button
               onClick={handleDownload}
-              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 font-medium transition-colors flex items-center"
+              disabled={generatingPDF}
+              className={`px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 font-medium transition-colors flex items-center ${generatingPDF ? 'opacity-50 cursor-not-allowed' : ''}`}
               aria-label="Download invoice as PDF"
             >
-              <Download className="w-4 h-4 mr-2" />
-              Download PDF
+              <Download className={`w-4 h-4 mr-2 ${generatingPDF ? 'animate-pulse' : ''}`} />
+              {generatingPDF ? 'Generating PDF...' : 'Download PDF'}
             </button>
             <button
               onClick={handlePrint}
@@ -182,21 +215,23 @@ const InvoiceDetailPage = () => {
         </div>
 
         {/* Invoice Content */}
-        <InvoiceTemplate 
-          invoice={invoice}
-          user={invoice.user}
-          client={invoice.client_details}
-          darkMode={darkMode}
-          showThemeToggle={true}
-          bankDetails={{
-            accountName: invoice.user?.company_name || 'Your Company Account',
-            accountNumber: invoice.user?.bank_account || 'XXXX-XXXX-XXXX-XXXX',
-            bankName: invoice.user?.bank_name || 'Your Bank Name',
-            swiftCode: invoice.user?.swift_code || 'SWIFTCODE',
-            routingNumber: invoice.user?.routing_number || '123456789'
-          }}
-          actions={null}
-        />
+        <div className="pdf-container">
+          <InvoiceTemplate 
+            invoice={invoice}
+            user={invoice.user}
+            client={invoice.client_details}
+            darkMode={darkMode}
+            showThemeToggle={true}
+            bankDetails={{
+              accountName: invoice.user?.company_name || 'Your Company Account',
+              accountNumber: invoice.user?.bank_account || 'XXXX-XXXX-XXXX-XXXX',
+              bankName: invoice.user?.bank_name || 'Your Bank Name',
+              swiftCode: invoice.user?.swift_code || 'SWIFTCODE',
+              routingNumber: invoice.user?.routing_number || '123456789'
+            }}
+            actions={null}
+          />
+        </div>
       </div>
     </DashboardLayout>
   );

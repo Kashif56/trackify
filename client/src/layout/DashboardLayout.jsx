@@ -98,7 +98,7 @@ const Sidebar = () => {
     { name: 'Invoices', href: '/invoices', icon: FileText },
     { name: 'Expenses', href: '/expenses', icon: DollarSign },
     { name: 'Clients', href: '/clients', icon: Users },
-    { name: 'Reports', href: '/reports', icon: BarChart2 },
+    { name: 'Analytics', href: '/analytics', icon: BarChart2 },
     { name: 'Settings', href: '/settings', icon: Settings },
   ];
 
@@ -136,8 +136,8 @@ const DashboardLayout = ({ children }) => {
     <div className="bg-gray-50 min-h-screen">
       <Navbar />
       <Sidebar />
-      <div className="p-4 lg:ml-64 pt-20">
-        <div className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+      <div className="lg:ml-64 bg-white p-4  pt-20">
+        <div className="p-4 bg-white rounded-lg">
           {children}
         </div>
       </div>

@@ -50,7 +50,8 @@ const EditInvoicePage = () => {
       try {
         setClientsLoading(true);
         const data = await clientService.getClients();
-        setClients(data.results || data);
+        const clientsList = data.results || data;
+        setClients(clientsList);
       } catch (err) {
         toast.error('Failed to fetch clients');
       } finally {
@@ -61,17 +62,25 @@ const EditInvoicePage = () => {
     fetchClients();
   }, []);
 
+  // Store the invoice data separately to ensure we have client info even before clients are loaded
+  const [invoiceData, setInvoiceData] = useState(null);
+
   // Fetch invoice on component mount
   useEffect(() => {
     const fetchInvoice = async () => {
       try {
         setLoading(true);
         const data = await invoiceService.getInvoiceById(id);
+        
         setInvoice(data);
+        setInvoiceData(data); // Store the complete invoice data
         
         // Set form data from fetched invoice
+        // Ensure client ID is stored as string for consistent comparison
+        const clientId = String(data.client);
+        
         setFormData({
-          client_id: data.client.id,
+          client_id: clientId,
           issue_date: data.issue_date,
           due_date: data.due_date,
           invoice_number: data.invoice_number,
@@ -107,8 +116,20 @@ const EditInvoicePage = () => {
   const taxAmount = subtotal * (formData.tax_rate / 100);
   const total = subtotal + taxAmount;
 
-  // Selected client details
-  const selectedClient = clients.find(client => client.id === formData.client_id) || null;
+  
+  // Selected client details - use the client from loaded clients array if available, otherwise use the client_details from invoice data
+  const selectedClient = clients.find(client => {
+    // Always convert both values to strings for comparison to avoid type mismatches
+    return String(client.id) === String(formData.client_id);
+  }) || (invoiceData?.client_details ? {
+    id: invoiceData.client,
+    name: invoiceData.client_details.name,
+    email: invoiceData.client_details.email,
+    address: invoiceData.client_details.address,
+    company_name: invoiceData.client_details.company_name,
+    phone_number: invoiceData.client_details.phone_number
+  } : null);
+  
   
   // Get user preferences for dark mode
   const darkMode = useSelector(state => state.userPreferences?.darkMode) || false;
@@ -119,9 +140,12 @@ const EditInvoicePage = () => {
   // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    // For client_id, ensure we store it as a string for consistent comparison
+    const processedValue = name === 'client_id' ? String(value) : value;
+    
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: processedValue
     }));
   };
 
@@ -172,11 +196,13 @@ const EditInvoicePage = () => {
 
   // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     
     // Validate form
     if (!formData.client_id) {
       toast.error("Please select a client");
+      // Scroll to client selection
+      document.getElementById('client_id')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
     
@@ -287,21 +313,37 @@ const EditInvoicePage = () => {
                 <label htmlFor="client_id" className="block text-sm font-medium text-gray-700 mb-1">
                   Select Client
                 </label>
-                <select
-                  id="client_id"
-                  name="client_id"
-                  value={formData.client_id}
-                  onChange={handleInputChange}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F97316] focus:border-transparent"
-                  disabled={clientsLoading}
-                >
-                  <option value="">-- Select a client --</option>
-                  {clients.map(client => (
-                    <option key={client.id} value={client.id}>
-                      {client.name}
-                    </option>
-                  ))}
-                </select>
+                {clientsLoading ? (
+                  <div className="flex items-center space-x-2 border border-gray-300 rounded-md px-3 py-2 bg-gray-50">
+                    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-[#F97316]"></div>
+                    <span className="text-gray-500">Loading clients...</span>
+                  </div>
+                ) : (
+                  <select
+                    id="client_id"
+                    name="client_id"
+                    value={formData.client_id || ''}
+                    onChange={handleInputChange}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F97316] focus:border-transparent"
+                  >
+                    <option value="">-- Select a client --</option>
+                    {clients.map(client => {
+                      // Always compare as strings to avoid type mismatches
+                      const isSelected = String(client.id) === String(formData.client_id);
+                      return (
+                        <option key={client.id} value={String(client.id)}>
+                          {client.name} {isSelected ? '(Selected)' : ''}
+                        </option>
+                      );
+                    })}
+                    {/* Add the invoice's client as an option if it's not in the clients list */}
+                    {invoiceData?.client && invoiceData?.client_details && !clients.some(c => String(c.id) === String(invoiceData.client)) && (
+                      <option key={invoiceData.client} value={String(invoiceData.client)}>
+                        {invoiceData.client_details.name} (Current)
+                      </option>
+                    )}
+                  </select>
+                )}
               </div>
               
               {selectedClient && (

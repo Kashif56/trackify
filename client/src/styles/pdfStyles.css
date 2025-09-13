@@ -1,0 +1,59 @@
+/* PDF Styling for Invoice */
+.pdf-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Print-specific styles */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  
+  .pdf-container,
+  .pdf-container * {
+    visibility: visible;
+  }
+  
+  .pdf-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    box-shadow: none;
+  }
+  
+  /* Hide UI elements when printing */
+  button, 
+  .header-actions,
+  nav,
+  footer {
+    display: none !important;
+  }
+}
+
+/* PDF-specific styles */
+@page {
+  size: A4;
+  margin: 0;
+}
+
+/* Ensure fonts render properly in PDF */
+.pdf-container * {
+  font-family: 'Arial', 'Helvetica', sans-serif;
+}
+
+/* Ensure table fits on one page */
+.pdf-container table {
+  page-break-inside: avoid;
+}
+
+/* Prevent page breaks inside important elements */
+.pdf-container .invoice-header,
+.pdf-container .invoice-footer,
+.pdf-container .invoice-summary {
+  page-break-inside: avoid;
+}

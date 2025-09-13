@@ -23,6 +23,8 @@ import VerifyEmail from './pages/users/VerifyEmail';
 import Dashboard from './pages/dashboard/Dashboard';
 import ExpensesPage from './pages/dashboard/ExpensesPage';
 import ClientsPage from './pages/dashboard/clients/ClientsPage';
+import AnalyticsPage from './pages/dashboard/analytics/AnalyticsPage';
+import ProfilePage from './pages/dashboard/ProfilePage';
 
 // Invoice Pages
 import InvoicesPage from './pages/dashboard/invoices/InvoicesPage';
@@ -71,6 +73,13 @@ function App() {
           </ProtectedRoute>
         } />
         
+        {/* Analytics Route */}
+        <Route path="/analytics" element={
+          <ProtectedRoute>
+            <AnalyticsPage />
+          </ProtectedRoute>
+        } />
+        
         {/* Invoice Routes */}
         <Route path="/invoices" element={
           <ProtectedRoute>
@@ -90,6 +99,13 @@ function App() {
         <Route path="/invoices/edit/:id" element={
           <ProtectedRoute>
             <EditInvoicePage />
+          </ProtectedRoute>
+        } />
+        
+        {/* Profile Route */}
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <ProfilePage />
           </ProtectedRoute>
         } />
         
