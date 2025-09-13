@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import dashboard from '../../assets/dashboard.png'
 
 const HeroSection = () => {
   const [isLoaded, set_is_loaded] = useState(false);
@@ -88,7 +89,7 @@ const HeroSection = () => {
             >
               <div className="relative rounded-lg shadow-xl overflow-hidden max-w-3xl transform hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl">
                 <img
-                  src="https://placehold.co/1200x800/e2e8f0/475569?text=Trackify+Dashboard+Preview"
+                  src={dashboard}
                   alt="Trackify dashboard preview"
                   className="w-full h-auto"
                   loading="lazy"

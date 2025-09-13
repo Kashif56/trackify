@@ -67,7 +67,8 @@ def get_filtered_data(user, start_date, end_date):
     invoices = Invoice.objects.filter(
         user=user,
         issue_date__gte=start_date,
-        issue_date__lte=end_date
+        issue_date__lte=end_date,
+        status='paid'
     )
     
     expenses = Expense.objects.filter(
@@ -337,16 +338,16 @@ def calculate_growth_rate(user, months=1):
     current_month_revenue = Invoice.objects.filter(
         user=user,
         status='paid',
-        issue_date__gte=current_month_start,
-        issue_date__lte=current_month_end
+        issue_date__month=current_month_start.month
     ).aggregate(total=Sum('total'))['total'] or 0
+
+    
     
     # Get total revenue for previous month (paid invoices only)
     previous_month_revenue = Invoice.objects.filter(
         user=user,
         status='paid',
-        issue_date__gte=previous_month_start,
-        issue_date__lte=previous_month_end
+        issue_date__month=previous_month_start.month
     ).aggregate(total=Sum('total'))['total'] or 0
     
     # Calculate growth rate

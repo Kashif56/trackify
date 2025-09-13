@@ -16,8 +16,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('tokens');
+   
     dispatch(logout());
     toast.success('Logged out successfully');
     navigate('/login');
@@ -37,8 +36,8 @@ const Navbar = () => {
             >
               <Menu className="w-6 h-6" />
             </button>
-            <Link to="/" className="flex items-center">
-              <span className="self-center text-xl font-bold whitespace-nowrap text-[#F97316]">Trackify</span>
+            <Link to="/" className="flex pl-5 items-center">
+              <h1 className="self-center text-3xl font-bold whitespace-nowrap text-[#F97316]">Trackify</h1>
             </Link>
           </div>
           <div className="flex items-center">
