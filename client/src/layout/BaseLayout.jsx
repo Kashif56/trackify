@@ -50,7 +50,7 @@ const Navbar = () => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0 flex items-center">
-              <img src={logo} alt="Trackify Logo" className="h-8 w-auto mr-2" />
+              <img src={logo} alt="Trackifye Logo" className="h-8 w-auto mr-2" />
              
             </Link>
           </div>
@@ -146,8 +146,8 @@ const Footer = () => {
           {/* Company Info */}
           <div className="col-span-1 md:col-span-1">
             <Link to="/" className="flex items-center">
-              <img src={logo} alt="Trackify Logo" className="h-8 w-auto mr-2" />
-              <span className="text-xl font-bold text-[#F97316]">Trackify</span>
+              <img src={logo} alt="Trackifye Logo" className="h-8 w-auto mr-2" />
+              <span className="text-xl font-bold text-[#F97316]">Trackifye</span>
             </Link>
             <p className="mt-2 text-sm text-[#4B5563]">
               Simple and affordable invoice & expense tracking for freelancers and small businesses.
@@ -208,7 +208,7 @@ const Footer = () => {
         
         <div className="mt-8 border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between">
           <p className="text-sm text-[#4B5563]">
-            &copy; {new Date().getFullYear()} Trackify. All rights reserved.
+            &copy; {new Date().getFullYear()} Trackifye. All rights reserved.
           </p>
           <div className="mt-4 md:mt-0 flex space-x-6">
             <a href="#" className="text-[#4B5563] hover:text-[#F97316] transition-colors duration-200">

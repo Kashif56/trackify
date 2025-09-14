@@ -46,7 +46,7 @@ const ReceiptModal = ({ payment, isOpen, onClose }) => {
           {/* Company Logo & Info */}
           <div className="flex justify-between mb-8">
             <div>
-              <h3 className="font-bold text-lg text-primary">Trackify</h3>
+              <h3 className="font-bold text-lg text-primary">Trackifye</h3>
               <p className="text-gray-600 text-sm">Your Financial Partner</p>
             </div>
             <div className="mb-6 flex justify-center">

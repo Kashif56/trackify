@@ -145,8 +145,8 @@ const InvoicePaymentPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center">
-              <img src={logo} alt="Trackify Logo" className="h-8 w-auto" />
-              <span className="ml-2 text-xl font-semibold text-gray-800">Trackify</span>
+              <img src={logo} alt="Trackifye Logo" className="h-8 w-auto" />
+              <span className="ml-2 text-xl font-semibold text-gray-800">Trackifye</span>
             </div>
           </div>
         </div>

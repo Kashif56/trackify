@@ -15,7 +15,7 @@ const SuccessStoriesSection = () => {
       name: "Sarah Johnson",
       role: "Freelance Designer",
       image: "https://placehold.co/100x100/e2e8f0/475569?text=SJ",
-      quote: "Trackify has completely transformed how I manage my freelance business. I've reduced the time spent on invoicing by 75% and get paid an average of 7 days faster!",
+      quote: "Trackifye has completely transformed how I manage my freelance business. I've reduced the time spent on invoicing by 75% and get paid an average of 7 days faster!",
       metrics: [
         { label: "Time Saved", value: "10 hrs/week" },
         { label: "Faster Payments", value: "7 days" }
@@ -25,7 +25,7 @@ const SuccessStoriesSection = () => {
       name: "Michael Chen",
       role: "Small Business Owner",
       image: "https://placehold.co/100x100/e2e8f0/475569?text=MC",
-      quote: "As my business grew, I needed a better way to track expenses and invoices. Trackify made it simple to scale our financial operations without hiring an accountant.",
+      quote: "As my business grew, I needed a better way to track expenses and invoices. Trackifye made it simple to scale our financial operations without hiring an accountant.",
       metrics: [
         { label: "Annual Savings", value: "$5,200" },
         { label: "Growth Supported", value: "3x" }
@@ -35,7 +35,7 @@ const SuccessStoriesSection = () => {
       name: "Emma Rodriguez",
       role: "Marketing Consultant",
       image: "https://placehold.co/100x100/e2e8f0/475569?text=ER",
-      quote: "The reporting features in Trackify give me clear insights into my most profitable clients and projects. This has helped me make strategic decisions to grow my business.",
+      quote: "The reporting features in Trackifye give me clear insights into my most profitable clients and projects. This has helped me make strategic decisions to grow my business.",
       metrics: [
         { label: "Revenue Increase", value: "32%" },
         { label: "Client Retention", value: "94%" }

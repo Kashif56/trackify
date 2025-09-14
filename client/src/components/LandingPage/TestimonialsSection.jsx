@@ -2,19 +2,19 @@ import { Star } from 'lucide-react';
 
 const testimonials = [
   {
-    content: "Trackify has completely transformed how I manage my freelance business. Creating invoices is so simple, and I love being able to see my income and expenses at a glance.",
+    content: "Trackifye has completely transformed how I manage my freelance business. Creating invoices is so simple, and I love being able to see my income and expenses at a glance.",
     author: "Sarah Johnson",
     role: "Freelance Designer",
     rating: 5,
   },
   {
-    content: "As a small business owner, I needed something simple without the complexity of full accounting software. Trackify is exactly what I was looking for.",
+    content: "As a small business owner, I needed something simple without the complexity of full accounting software. Trackifye is exactly what I was looking for.",
     author: "Michael Chen",
     role: "Coffee Shop Owner",
     rating: 5,
   },
   {
-    content: "I've tried many invoice tools, but Trackify stands out for its simplicity and affordability. The customer support is also excellent!",
+    content: "I've tried many invoice tools, but Trackifye stands out for its simplicity and affordability. The customer support is also excellent!",
     author: "Priya Patel",
     role: "Marketing Consultant",
     rating: 5,

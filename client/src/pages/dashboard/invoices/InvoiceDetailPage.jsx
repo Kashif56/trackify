@@ -407,7 +407,7 @@ const InvoiceDetailPage = () => {
             <div className="flex justify-center items-center">
               <div className="flex items-center">
         
-                <img src={logo} alt="Trackify Logo" className="h-8 w-auto mr-2" />
+                <img src={logo} alt="Trackifye Logo" className="h-8 w-auto mr-2" />
                
               </div>
             </div>
@@ -507,7 +507,7 @@ const InvoiceDetailPage = () => {
           {/* Footer with subtle CTA */}
           {!isAuthenticated && (
             <div className="mt-8 text-center text-sm text-gray-500">
-              <p>Powered by <a href="/" className="text-[#F97316] hover:text-[#EA580C] font-medium">Trackify</a></p>
+              <p>Powered by <a href="/" className="text-[#F97316] hover:text-[#EA580C] font-medium">Trackifye</a></p>
             </div>
           )}
         </div>

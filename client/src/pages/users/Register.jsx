@@ -119,7 +119,7 @@ const Register = () => {
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-text-primary">Create an Account</h1>
             <p className="mt-2 text-text-secondary">
-              Start tracking your finances with Trackify
+              Start tracking your finances with Trackifye
             </p>
           </div>
         

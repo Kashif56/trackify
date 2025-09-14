@@ -63,7 +63,7 @@ const FeaturesSection = () => {
             Simple Tools for Freelancers & Small Businesses
           </p>
           <p className="mt-6 text-lg leading-8 text-[#4B5563]">
-            Trackify provides all the essential tools you need to manage your business finances without the complexity and high cost of traditional accounting software.
+            Trackifye provides all the essential tools you need to manage your business finances without the complexity and high cost of traditional accounting software.
           </p>
         </motion.div>
         

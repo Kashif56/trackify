@@ -110,7 +110,7 @@ const StatsCounterSection = () => {
             Our Impact in Numbers
           </h2>
           <p className="mt-4 text-lg text-text-secondary max-w-2xl mx-auto">
-            See how Trackify is transforming financial management for businesses worldwide
+            See how Trackifye is transforming financial management for businesses worldwide
           </p>
         </motion.div>
 

@@ -51,7 +51,7 @@ const Navbar = ({ toggleSidebar, isSidebarCollapsed }) => {
               {isSidebarCollapsed ? <ChevronRight className="w-6 h-6" /> : <ChevronLeft className="w-6 h-6" />}
             </button>
             <Link to="/" className="flex pl-2 items-center">
-              <img src={logo} alt="Trackify Logo" className="h-8 w-auto mr-2" />
+              <img src={logo} alt="Trackifye Logo" className="h-8 w-auto mr-2" />
             </Link>
           </div>
           <div className="flex items-center">

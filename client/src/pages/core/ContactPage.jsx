@@ -63,7 +63,7 @@ const ContactPage = () => {
                   </div>
                   <div>
                     <p className="font-semibold text-gray-900">Email</p>
-                    <p className="mt-1 text-gray-600">support@trackify.com</p>
+                    <p className="mt-1 text-gray-600">info@trackifye.com</p>
                   </div>
                 </div>
                 
@@ -73,7 +73,7 @@ const ContactPage = () => {
                   </div>
                   <div>
                     <p className="font-semibold text-gray-900">Phone</p>
-                    <p className="mt-1 text-gray-600">+1 (555) 123-4567</p>
+                    <p className="mt-1 text-gray-600">+92 (349) 2648060</p>
                   </div>
                 </div>
                 
@@ -83,7 +83,7 @@ const ContactPage = () => {
                   </div>
                   <div>
                     <p className="font-semibold text-gray-900">Office</p>
-                    <p className="mt-1 text-gray-600">123 Business Ave, Suite 100, San Francisco, CA 94107</p>
+                    <p className="mt-1 text-gray-600">Jhelum, Pakistan</p>
                   </div>
                 </div>
               </div>

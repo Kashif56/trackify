@@ -1,4 +1,4 @@
-# Trackify API Documentation
+# Trackifye API Documentation
 
 ## Table of Contents
 1. [Authentication](#authentication)

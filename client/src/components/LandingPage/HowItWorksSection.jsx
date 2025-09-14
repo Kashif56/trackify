@@ -56,7 +56,7 @@ const HowItWorksSection = () => {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-3xl font-bold text-text-primary sm:text-4xl">
-            How Trackify Works
+            How Trackifye Works
           </h2>
           <p className="mt-4 text-lg text-text-secondary max-w-2xl mx-auto">
             Simplify your financial workflow in just a few steps
@@ -103,7 +103,7 @@ const HowItWorksSection = () => {
             href="/register"
             className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors duration-200"
           >
-            Start Using Trackify Today
+            Start Using Trackifye Today
           </a>
         </motion.div>
       </div>

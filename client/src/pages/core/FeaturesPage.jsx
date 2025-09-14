@@ -11,7 +11,7 @@ const FeaturesPage = () => {
               Features
             </h1>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              Discover all the powerful features that make Trackify the perfect solution for freelancers and small businesses.
+              Discover all the powerful features that make Trackifye the perfect solution for freelancers and small businesses.
             </p>
           </div>
         </div>

@@ -39,7 +39,7 @@ const CTABanner = () => {
                 transition={{ duration: 0.7, delay: 0.2 }}
               >
                 <span className="block">Ready to streamline your finances?</span>
-                <span className="block text-primary">Start using Trackify today.</span>
+                <span className="block text-primary">Start using Trackifye today.</span>
               </motion.h2>
               <motion.p 
                 className="mt-4 text-lg leading-6 text-text-secondary"
@@ -47,7 +47,7 @@ const CTABanner = () => {
                 animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
                 transition={{ duration: 0.7, delay: 0.3 }}
               >
-                Join thousands of freelancers and small businesses who trust Trackify for their invoicing and expense tracking needs.
+                Join thousands of freelancers and small businesses who trust Trackifye for their invoicing and expense tracking needs.
               </motion.p>
             </div>
             <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">

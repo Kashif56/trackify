@@ -63,7 +63,7 @@ const HeroSection = () => {
                 animate={isLoaded ? { opacity: 1 } : { opacity: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
               >
-                Trackify helps freelancers and small businesses create professional invoices, 
+                Trackifye helps freelancers and small businesses create professional invoices, 
                 track expenses, and get paid faster without the complexity of traditional accounting software.
               </motion.p>
             </motion.div>
