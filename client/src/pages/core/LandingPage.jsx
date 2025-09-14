@@ -36,10 +36,8 @@ const LandingPage = () => {
   return (
     <BaseLayout>
 
-      <PreloadResources />
       <ScrollToTopButton />
       <CookieConsent />
-      <AnnouncementBar />
       
       {/* Hero section - eagerly loaded */}
       <HeroSection />

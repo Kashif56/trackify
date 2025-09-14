@@ -24,7 +24,7 @@ const Input = forwardRef(({
   ...props
 }, ref) => {
   // Base classes for all inputs
-  const baseInputClasses = 'block px-3 py-2 border rounded-md focus:outline-none transition-colors duration-200 bg-gray-100 border-neutral-dark-gray';
+  const baseInputClasses = 'block px-3 py-2 border-2 shadow-sm border-gray-900 rounded-md focus:outline-none transition-colors duration-200';
   
   // Error specific classes
   const errorClasses = error 
@@ -51,7 +51,7 @@ const Input = forwardRef(({
       {label && (
         <label 
           htmlFor={id || name} 
-          className={`block text-sm font-medium text-text-primary mb-1 ${labelClassName} ${required ? 'required' : ''}`}
+          className={`block text-sm text-gray-600 mb-1 ${labelClassName} ${required ? 'required' : ''}`}
         >
           {label}
           {required && <span className="text-status-error ml-1">*</span>}

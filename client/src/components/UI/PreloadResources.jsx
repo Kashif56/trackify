@@ -17,10 +17,10 @@ const PreloadResources = () => {
     // Preload web fonts if needed
     const preloadFonts = () => {
       if ('fonts' in document) {
-        // Load Inter font variants
+        // Load Poppins font variants
         Promise.all([
-          document.fonts.load('1em Inter'),
-          document.fonts.load('bold 1em Inter')
+          document.fonts.load('1em Poppins'),
+          document.fonts.load('bold 1em Poppins')
         ]).then(() => {
           // Fonts are loaded
           document.documentElement.classList.add('fonts-loaded');

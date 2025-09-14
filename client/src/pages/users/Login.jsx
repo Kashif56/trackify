@@ -60,6 +60,7 @@ const Login = () => {
     
     try {
       const response = await authApi.login(formData);
+      console.log(response)
       dispatch(loginSuccess(response));
       toast.success('Login successful!');
       navigate('/dashboard');
