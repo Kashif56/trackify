@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import { X, Upload } from 'lucide-react';
 
 /**
@@ -14,6 +15,12 @@ import { X, Upload } from 'lucide-react';
  * @param {Array} props.categories - Array of expense categories
  */
 const AddExpenseModal = ({ isOpen, onClose, onSave, categories = [] }) => {
+  // Get user's currency preference from Redux store
+  const { user } = useSelector(state => state.user);
+  const userCurrency = user?.profile?.currency || 'pkr';
+  const currencySymbol = userCurrency === 'pkr' ? 'Rs' : '$';
+  const currencyCode = userCurrency === 'pkr' ? 'PKR' : 'USD';
+  
   const [formData, setFormData] = useState({
     description: '',
     category: '',
@@ -212,7 +219,7 @@ const AddExpenseModal = ({ isOpen, onClose, onSave, categories = [] }) => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label htmlFor="expense-amount" className="block text-sm font-medium text-gray-700 mb-1">
-                        Amount ($) *
+                        Amount ({currencySymbol}) *
                       </label>
                       <input
                         type="number"

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import {
   LineChart,
   Line,
@@ -24,6 +25,12 @@ const IncomeExpensesChart = () => {
     endDate: '',
   });
   const [showCustomRange, setShowCustomRange] = useState(false);
+  
+  // Get user's currency preference from Redux store
+  const { user } = useSelector(state => state.user);
+  const userCurrency = user?.profile?.currency || 'pkr';
+  const currencySymbol = userCurrency === 'pkr' ? 'Rs' : '$';
+  const currencyCode = userCurrency === 'pkr' ? 'PKR' : 'USD';
 
   const dateRangeOptions = [
     { value: 'daily', label: 'Daily (Last 30 days)' },
@@ -91,7 +98,7 @@ const IncomeExpensesChart = () => {
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: currencyCode,
       maximumFractionDigits: 0
     }).format(value);
   };
@@ -235,7 +242,7 @@ const IncomeExpensesChart = () => {
             <p className="text-xl font-bold text-green-600">
               {new Intl.NumberFormat('en-US', {
                 style: 'currency',
-                currency: 'USD',
+                currency: currencyCode,
               }).format(chartData.data.reduce((sum, item) => sum + item.income, 0))}
             </p>
           </div>
@@ -244,7 +251,7 @@ const IncomeExpensesChart = () => {
             <p className="text-xl font-bold text-red-600">
               {new Intl.NumberFormat('en-US', {
                 style: 'currency',
-                currency: 'USD',
+                currency: currencyCode,
               }).format(chartData.data.reduce((sum, item) => sum + item.expenses, 0))}
             </p>
           </div>
@@ -253,7 +260,7 @@ const IncomeExpensesChart = () => {
             <p className="text-xl font-bold text-blue-600">
               {new Intl.NumberFormat('en-US', {
                 style: 'currency',
-                currency: 'USD',
+                currency: currencyCode,
               }).format(chartData.data.reduce((sum, item) => sum + item.net, 0))}
             </p>
           </div>

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
 import { ToastContainer } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
@@ -25,12 +24,17 @@ import ExpensesPage from './pages/dashboard/ExpensesPage';
 import ClientsPage from './pages/dashboard/clients/ClientsPage';
 import AnalyticsPage from './pages/dashboard/analytics/AnalyticsPage';
 import ProfilePage from './pages/dashboard/ProfilePage';
+import PaymentSettingsPage from './pages/dashboard/PaymentSettingsPage';
 
 // Invoice Pages
 import InvoicesPage from './pages/dashboard/invoices/InvoicesPage';
 import AddInvoicePage from './pages/dashboard/invoices/AddInvoicePage';
 import EditInvoicePage from './pages/dashboard/invoices/EditInvoicePage';
 import InvoiceDetailPage from './pages/dashboard/invoices/InvoiceDetailPage';
+
+// Payment Pages
+import PaymentHistory from './pages/PaymentHistory';
+
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -40,7 +44,7 @@ const ProtectedRoute = ({ children }) => {
 
 function App() {
   return (
-    <HelmetProvider>
+    <>
       <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
       <Routes>
         {/* Public Routes */}
@@ -109,12 +113,26 @@ function App() {
           </ProtectedRoute>
         } />
         
-        {/* Test Routes */}
-        <Route path="/test/invoice-template" element={
-          <InvoiceTemplateTest />
+      
+        
+        {/* Payment Settings Route */}
+        <Route path="/payment-settings" element={
+          <ProtectedRoute>
+            <PaymentSettingsPage />
+          </ProtectedRoute>
         } />
+        
+        {/* Payment Routes */}
+        <Route path="/payments" element={
+          <ProtectedRoute>
+            <PaymentHistory />
+          </ProtectedRoute>
+        } />
+      
+        
+       
       </Routes>
-    </HelmetProvider>
+    </>
   );
 }
 

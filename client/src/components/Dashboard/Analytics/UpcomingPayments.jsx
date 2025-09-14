@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getUpcomingPayments } from '../../../api/analyticsApi';
 import { toast } from 'react-toastify';
@@ -9,6 +10,11 @@ const UpcomingPayments = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [days, setDays] = useState(30);
+  
+  // Get user's currency preference from Redux store
+  const { user } = useSelector(state => state.user);
+  const userCurrency = user?.profile?.currency || 'pkr';
+  const currencyCode = userCurrency === 'pkr' ? 'PKR' : 'USD';
 
   useEffect(() => {
     fetchPaymentsData();
@@ -151,7 +157,7 @@ const UpcomingPayments = () => {
                       <span className="text-gray-900 font-medium">
                         {new Intl.NumberFormat('en-US', {
                           style: 'currency',
-                          currency: 'USD',
+                          currency: currencyCode,
                         }).format(payment.amount)}
                       </span>
                     </td>

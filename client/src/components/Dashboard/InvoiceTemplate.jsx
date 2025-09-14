@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { CheckCircle, AlertCircle, Clock, FileText, Moon, Sun } from 'lucide-react';
 
 /**
@@ -27,6 +28,11 @@ const InvoiceTemplate = ({
 }) => {
   // Local state for dark mode toggle
   const [localDarkMode, setLocalDarkMode] = useState(initialDarkMode);
+  
+  // Get user's currency preference from Redux store
+  const reduxUser = useSelector(state => state.user.user);
+  const userCurrency = reduxUser?.profile?.currency || 'pkr';
+  const currencySymbol = userCurrency === 'pkr' ? 'Rs ' : '$';
   
   // Update local dark mode when prop changes
   useEffect(() => {
@@ -180,7 +186,7 @@ const InvoiceTemplate = ({
         </div>
         
         {/* Client & Invoice Info */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+        <div className="grid grid-cols-2 md:grid-cols-2 gap-8 mb-10">
           <div>
             <h2 className={`text-sm font-medium ${localDarkMode ? 'text-gray-400' : 'text-gray-500'} uppercase mb-3`}>Bill To:</h2>
             <p className={`font-medium ${theme.text}`}>{client?.name || 'Client Name'}</p>
@@ -190,7 +196,7 @@ const InvoiceTemplate = ({
             {client?.phone_number && <p className={theme.textSecondary}>{client.phone_number}</p>}
           </div>
           <div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4 text-right">
               <div>
                 <h2 className={`text-sm font-medium ${localDarkMode ? 'text-gray-400' : 'text-gray-500'} uppercase mb-3`}>Invoice Date:</h2>
                 <p className={theme.text}>
@@ -204,9 +210,10 @@ const InvoiceTemplate = ({
                 </p>
               </div>
               <div className="col-span-2 mt-4">
-                <h2 className={`text-sm font-medium ${localDarkMode ? 'text-gray-400' : 'text-gray-500'} uppercase mb-3`}>Amount Due:</h2>
-                <p className="text-2xl font-bold text-[#F97316]">
-                  ${invoice?.total ? parseFloat(invoice.total).toFixed(2) : '0.00'}
+                <h2 className={`text-sm font-medium ${localDarkMode ? 'text-gray-400' : 'text-gray-500'}  uppercase mb-3`}>
+                  {invoice.status && invoice.status=='unpaid' ? `Amount Due` : "Amount Paid"}</h2>
+                <p className="text-2xl font-bold">
+                  {currencySymbol}{invoice?.total ? parseFloat(invoice.total).toFixed(2) : '0.00'}
                 </p>
               </div>
             </div>
@@ -229,8 +236,8 @@ const InvoiceTemplate = ({
                 <tr key={item.id} className={index % 2 === 0 ? theme.tableBg : theme.tableAltBg}>
                   <td className={`px-6 py-4 border-b ${theme.border}`}>{item.description}</td>
                   <td className={`px-6 py-4 border-b ${theme.border} text-right`}>{item.quantity}</td>
-                  <td className={`px-6 py-4 border-b ${theme.border} text-right`}>${parseFloat(item.unit_price || 0).toFixed(2)}</td>
-                  <td className={`px-6 py-4 border-b ${theme.border} text-right font-medium`}>${parseFloat(item.quantity * (item.unit_price || 0)).toFixed(2)}</td>
+                  <td className={`px-6 py-4 border-b ${theme.border} text-right`}>{currencySymbol}{parseFloat(item.unit_price || 0).toFixed(2)}</td>
+                  <td className={`px-6 py-4 border-b ${theme.border} text-right font-medium`}>{currencySymbol}{parseFloat(item.quantity * (item.unit_price || 0)).toFixed(2)}</td>
                 </tr>
               ))}
               {(!invoice?.items || invoice.items.length === 0) && (
@@ -247,26 +254,19 @@ const InvoiceTemplate = ({
           <div className="w-80">
             <div className={`flex justify-between py-3 border-b ${theme.border}`}>
               <span className={theme.textSecondary}>Subtotal:</span>
-              <span className={`font-medium ${theme.text}`}>${invoice?.subtotal ? parseFloat(invoice.subtotal).toFixed(2) : '0.00'}</span>
+              <span className={`font-medium ${theme.text}`}>{currencySymbol}{invoice?.subtotal ? parseFloat(invoice.subtotal).toFixed(2) : '0.00'}</span>
             </div>
             {invoice?.tax_rate > 0 && (
               <div className={`flex justify-between py-3 border-b ${theme.border}`}>
                 <span className={theme.textSecondary}>Tax ({invoice.tax_rate}%):</span>
-                <span className={`font-medium ${theme.text}`}>${invoice?.tax_amount ? parseFloat(invoice.tax_amount).toFixed(2) : '0.00'}</span>
+                <span className={`font-medium ${theme.text}`}>{currencySymbol}{invoice?.tax_amount ? parseFloat(invoice.tax_amount).toFixed(2) : '0.00'}</span>
               </div>
             )}
             <div className="flex justify-between py-3 text-lg font-semibold">
               <span className={theme.text}>Total:</span>
-              <span className={theme.text}>${invoice?.total ? parseFloat(invoice.total).toFixed(2) : '0.00'}</span>
+              <span className={theme.text}>{currencySymbol}{invoice?.total ? parseFloat(invoice.total).toFixed(2) : '0.00'}</span>
             </div>
-            {invoice?.status && (
-              <div className={`mt-4 py-3 px-4 ${theme.sectionBg} rounded-md border ${theme.border}`}>
-                <div className="flex justify-between items-center">
-                  <span className={`font-medium ${localDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Payment Status:</span>
-                  {renderStatusBadge(invoice.status)}
-                </div>
-              </div>
-            )}
+           
           </div>
         </div>
         

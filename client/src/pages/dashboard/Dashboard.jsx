@@ -133,21 +133,21 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <StatCard 
             title="Total Income" 
-            value={`$${stats.totalIncome.toFixed(2)}`} 
+            value={`${stats.totalIncome.toFixed(2)}`} 
             icon={<DollarSign />}
             subtitle={`${recentInvoices.length} invoices`}
             color="green"
           />
           <StatCard 
             title="Total Expenses" 
-            value={`$${stats.totalExpenses.toFixed(2)}`} 
+            value={`${stats.totalExpenses.toFixed(2)}`} 
             icon={<CreditCard />}
             subtitle={`${recentExpenses.length} expenses`}
             color="red"
           />
           <StatCard 
             title="Balance" 
-            value={`$${stats.balance.toFixed(2)}`} 
+            value={`${stats.balance.toFixed(2)}`} 
             icon={<TrendingUp />}
             subtitle="Current balance"
             color="primary"

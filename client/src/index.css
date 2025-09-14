@@ -12,6 +12,9 @@
     --color-status-warning: #FBBF24;
   }
 
+
+
+
 @media print {
   /* Hide everything by default */
   body * {

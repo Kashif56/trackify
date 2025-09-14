@@ -22,6 +22,31 @@ const invoiceService = {
     }
   },
 
+  // Delete an invoice
+  deleteInvoice: async (id) => {
+    try {
+      await axiosInstance.delete(`/invoice/${id}/`);
+      return { success: true };
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to delete invoice' };
+    }
+  },
+
+  /**
+   * Check if an invoice has a payment gateway configured
+   * 
+   * @param {string} id - Invoice ID to check
+   * @returns {Promise} - Promise with gateway availability information
+   */
+  checkInvoicePaymentGateway: async (id) => {
+    try {
+      const response = await api.get(`/payment/invoice/${id}/gateway-check/`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to check invoice payment gateway' };
+    }
+  },
+
   // Create a new invoice
   createInvoice: async (invoiceData) => {
     try {

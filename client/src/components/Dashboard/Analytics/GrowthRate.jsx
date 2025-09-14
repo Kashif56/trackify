@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { getGrowthRate } from '../../../api/analyticsApi';
 import { toast } from 'react-toastify';
 import { TrendingUp, TrendingDown, RefreshCw } from 'lucide-react';
@@ -7,6 +8,11 @@ const GrowthRate = () => {
   const [growthData, setGrowthData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // Get user's currency preference from Redux store
+  const { user } = useSelector(state => state.user);
+  const userCurrency = user?.profile?.currency || 'pkr';
+  const currencyCode = userCurrency === 'pkr' ? 'PKR' : 'USD';
 
   useEffect(() => {
     fetchGrowthData();
@@ -80,7 +86,7 @@ const GrowthRate = () => {
                 <p className="text-lg font-bold text-gray-800">
                   {new Intl.NumberFormat('en-US', {
                     style: 'currency',
-                    currency: 'USD',
+                    currency: currencyCode,
                   }).format(growthData.current_month_revenue)}
                 </p>
               </div>
@@ -89,7 +95,7 @@ const GrowthRate = () => {
                 <p className="text-lg font-bold text-gray-800">
                   {new Intl.NumberFormat('en-US', {
                     style: 'currency',
-                    currency: 'USD',
+                    currency: currencyCode,
                   }).format(growthData.previous_month_revenue)}
                 </p>
               </div>

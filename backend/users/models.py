@@ -8,6 +8,12 @@ from datetime import timedelta
 from subscription.models import Plan, Subscription
 
 
+CURRENCY_CHOICES = (
+    ('pkr', 'PKR'),
+    ('usd', 'USD')
+)
+
+
 class UserProfile(models.Model):
     """Profile model for extending the User model"""
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
@@ -20,6 +26,11 @@ class UserProfile(models.Model):
     zip_code = models.CharField(null=True, blank=True, max_length=20)
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
     is_email_verified = models.BooleanField(default=False)
+
+    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='pkr')
+    allow_platform_gateway = models.BooleanField(default=False)
+
+
     
     def __str__(self):
         return self.user.email

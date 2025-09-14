@@ -212,11 +212,11 @@ const styles = StyleSheet.create({
   },
 });
 
-// Format currency
-const formatCurrency = (amount) => {
+// Format currency based on user preference
+const formatCurrency = (amount, currencyCode = 'USD') => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'USD',
+    currency: currencyCode,
   }).format(amount);
 };
 
@@ -228,6 +228,8 @@ const formatDate = (dateString) => {
 
 // Invoice PDF Document
 const InvoicePDF = ({ invoice, user, client, bankDetails }) => {
+  // Get user's currency preference
+  const currencyCode = user?.profile?.currency === 'pkr' ? 'PKR' : 'USD';
   // Calculate subtotal
   const subtotal = invoice.items.reduce((sum, item) => sum + (item.quantity * item.unit_price), 0);
   
@@ -332,9 +334,9 @@ const InvoicePDF = ({ invoice, user, client, bankDetails }) => {
             <View key={index} style={styles.tableRow}>
               <Text style={[styles.tableCell, styles.col1]}>{item.description}</Text>
               <Text style={[styles.tableCell, styles.col2]}>{item.quantity}</Text>
-              <Text style={[styles.tableCell, styles.col3]}>{formatCurrency(item.unit_price)}</Text>
+              <Text style={[styles.tableCell, styles.col3]}>{formatCurrency(item.unit_price, currencyCode)}</Text>
               <Text style={[styles.tableCell, styles.col4]}>
-                {formatCurrency(item.quantity * item.unit_price)}
+                {formatCurrency(item.quantity * item.unit_price, currencyCode)}
               </Text>
             </View>
           ))}
@@ -344,15 +346,15 @@ const InvoicePDF = ({ invoice, user, client, bankDetails }) => {
         <View style={styles.summaryTable}>
           <View style={styles.summaryRow}>
             <Text style={styles.summaryLabel}>Subtotal:</Text>
-            <Text style={styles.summaryValue}>{formatCurrency(subtotal)}</Text>
+            <Text style={styles.summaryValue}>{formatCurrency(subtotal, currencyCode)}</Text>
           </View>
           <View style={styles.summaryRow}>
             <Text style={styles.summaryLabel}>Tax ({invoice.tax_rate}%):</Text>
-            <Text style={styles.summaryValue}>{formatCurrency(taxAmount)}</Text>
+            <Text style={styles.summaryValue}>{formatCurrency(taxAmount, currencyCode)}</Text>
           </View>
           <View style={[styles.summaryRow, styles.totalRow]}>
             <Text style={styles.summaryLabel}>Total:</Text>
-            <Text style={styles.summaryValue}>{formatCurrency(invoice.total)}</Text>
+            <Text style={styles.summaryValue}>{formatCurrency(invoice.total, currencyCode)}</Text>
           </View>
         </View>
         

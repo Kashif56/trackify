@@ -10,7 +10,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ['company_name', 'phone_number', 'address', 'city', 'state',
-                 'country', 'zip_code', 'profile_picture']
+                 'country', 'zip_code', 'profile_picture', 'currency', 'allow_platform_gateway']
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -57,4 +57,4 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ['company_name', 'phone_number', 'address', 'city', 'state',
-                 'country', 'zip_code', 'profile_picture']
+                 'country', 'zip_code', 'profile_picture', 'currency', 'allow_platform_gateway']

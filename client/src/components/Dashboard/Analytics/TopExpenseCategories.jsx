@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, Sector } from 'recharts';
 import { getTopExpenseCategories } from '../../../api/analyticsApi';
 import { toast } from 'react-toastify';
@@ -10,6 +11,11 @@ const TopExpenseCategories = () => {
   const [limit, setLimit] = useState(5);
   const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' });
   const [showDateFilter, setShowDateFilter] = useState(false);
+  
+  // Get user's currency preference from Redux store
+  const { user } = useSelector(state => state.user);
+  const userCurrency = user?.profile?.currency || 'pkr';
+  const currencyCode = userCurrency === 'pkr' ? 'PKR' : 'USD';
 
   useEffect(() => {
     fetchCategoriesData();
@@ -74,7 +80,7 @@ const TopExpenseCategories = () => {
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: currencyCode,
       maximumFractionDigits: 0
     }).format(value);
   };
@@ -268,7 +274,7 @@ const TopExpenseCategories = () => {
                 <p className="text-xl font-bold text-gray-800">
                   {new Intl.NumberFormat('en-US', {
                     style: 'currency',
-                    currency: 'USD',
+                    currency: currencyCode,
                   }).format(calculateTotal())}
                 </p>
               </div>
@@ -285,7 +291,7 @@ const TopExpenseCategories = () => {
                         <p className="text-sm font-bold text-gray-800">
                           {new Intl.NumberFormat('en-US', {
                             style: 'currency',
-                            currency: 'USD',
+                            currency: currencyCode,
                           }).format(item.total)}
                         </p>
                       </div>

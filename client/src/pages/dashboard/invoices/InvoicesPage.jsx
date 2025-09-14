@@ -173,7 +173,7 @@ const InvoicesPage = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <StatCard 
           title="Total Invoices" 
-          value={`$${totalInvoicesAmount.toFixed(2)}`} 
+          value={`${totalInvoicesAmount.toFixed(2)}`} 
           icon={<FileText className="w-6 h-6 text-[#F97316]" />} 
           subtitle={`${invoices.length} invoices`}
           bgColor="bg-white"
@@ -181,7 +181,7 @@ const InvoicesPage = () => {
         />
         <StatCard 
           title="Paid" 
-          value={`$${paidAmount.toFixed(2)}`} 
+          value={`${paidAmount.toFixed(2)}`} 
           icon={<DollarSign className="w-6 h-6 text-green-500" />} 
           subtitle={`${paidInvoices.length} invoices`}
           bgColor="bg-green-50"
@@ -189,7 +189,7 @@ const InvoicesPage = () => {
         />
         <StatCard 
           title="Unpaid" 
-          value={`$${unpaidAmount.toFixed(2)}`} 
+          value={`${unpaidAmount.toFixed(2)}`} 
           icon={<Calendar className="w-6 h-6 text-yellow-500" />} 
           subtitle={`${unpaidInvoices.length} invoices`}
           bgColor="bg-yellow-50"
@@ -197,7 +197,7 @@ const InvoicesPage = () => {
         />
         <StatCard 
           title="Overdue" 
-          value={`$${overdueAmount.toFixed(2)}`} 
+          value={`${overdueAmount.toFixed(2)}`} 
           icon={<AlertCircle className="w-6 h-6 text-red-500" />} 
           subtitle={`${overdueInvoices.length} invoices`}
           bgColor="bg-red-50"

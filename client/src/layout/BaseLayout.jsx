@@ -7,6 +7,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../redux/slices/userSlice.js';
 import { toast } from 'react-toastify';
 
+import logo from '../assets/logo.svg'
+
+
 const Navbar = () => {
   const [isMenuOpen, set_is_menu_open] = useState(false);
   const [scrolled, set_scrolled] = useState(false);
@@ -35,20 +38,20 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('tokens');
+
     dispatch(logout());
     toast.success('Logged out successfully');
     
   };
 
   return (
-    <nav className={`${scrolled ? 'sticky top-0 z-50 shadow-md backdrop-blur bg-white/90 transition-all duration-300' : 'bg-white'} shadow-sm`}>
+    <nav className={`${scrolled ? 'sticky top-0 z-20 shadow-md backdrop-blur bg-white/90 transition-all duration-300' : 'relative z-20'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0 flex items-center">
-              <span className="text-xl font-bold text-[#F97316]">Trackify</span>
+              <img src={logo} alt="Trackify Logo" className="h-8 w-auto mr-2" />
+             
             </Link>
           </div>
           
@@ -57,13 +60,13 @@ const Navbar = () => {
             <Link to="/" className="text-[#1F2937] hover:text-[#F97316] px-3 py-2 text-sm font-medium transition-colors duration-200">
               Home
             </Link>
-            <ScrollLink to="features" smooth={true} duration={500} offset={-80} className="text-[#1F2937] hover:text-[#F97316] px-3 py-2 text-sm font-medium cursor-pointer transition-colors duration-200">
+            <ScrollLink to="features" smooth={true} duration={500} offset={-80} className="text-[#1F2937] hover:text-[#F97316] px-3 py-2 text-sm font-medium cursor-pointer transition-colors duration-200" style={{ zIndex: 10, position: 'relative' }}>
               Features
             </ScrollLink>
-            <ScrollLink to="testimonials" smooth={true} duration={500} offset={-80} className="text-[#1F2937] hover:text-[#F97316] px-3 py-2 text-sm font-medium cursor-pointer transition-colors duration-200">
+            <ScrollLink to="testimonials" smooth={true} duration={500} offset={-80} className="text-[#1F2937] hover:text-[#F97316] px-3 py-2 text-sm font-medium cursor-pointer transition-colors duration-200" style={{ zIndex: 10, position: 'relative' }}>
               Testimonials
             </ScrollLink>
-            <ScrollLink to="pricing" smooth={true} duration={500} offset={-80} className="text-[#1F2937] hover:text-[#F97316] px-3 py-2 text-sm font-medium cursor-pointer transition-colors duration-200">
+            <ScrollLink to="pricing" smooth={true} duration={500} offset={-80} className="text-[#1F2937] hover:text-[#F97316] px-3 py-2 text-sm font-medium cursor-pointer transition-colors duration-200" style={{ zIndex: 10, position: 'relative' }}>
               Pricing
             </ScrollLink>
             <Link to="/contact" className="text-[#1F2937] hover:text-[#F97316] px-3 py-2 text-sm font-medium transition-colors duration-200">
@@ -143,6 +146,7 @@ const Footer = () => {
           {/* Company Info */}
           <div className="col-span-1 md:col-span-1">
             <Link to="/" className="flex items-center">
+              <img src={logo} alt="Trackify Logo" className="h-8 w-auto mr-2" />
               <span className="text-xl font-bold text-[#F97316]">Trackify</span>
             </Link>
             <p className="mt-2 text-sm text-[#4B5563]">

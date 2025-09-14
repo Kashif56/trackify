@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'expense',
     'subscription',
     'analytics',
+    'payment',
 ]
 
 MIDDLEWARE = [
@@ -188,4 +189,27 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 
 # Frontend URL for email verification
 FRONTEND_URL = os.getenv('FRONTEND_URL')  # Update this with your frontend URL
+
+# Payment Gateway Configuration
+PAYMENT_GATEWAYS = [
+    {
+        'name': 'stripe',
+        'display_name': 'Stripe',
+        'module_path': 'payment.gateways.stripe_gateway',
+        'class_name': 'StripeGateway'
+    },
+    # Add more gateways here as they are implemented
+]
+
+# Platform Gateway Configuration
+PLATFORM_GATEWAY = {
+    'name': 'stripe',
+    'display_name': 'Trackify Payment Gateway',
+    'credentials': {
+        'publishable_key': os.getenv('PLATFORM_STRIPE_PUBLISHABLE_KEY', 'pk_test_platform'),
+        'secret_key': os.getenv('PLATFORM_STRIPE_SECRET_KEY', 'sk_test_platform'),
+        'webhook_secret': os.getenv('PLATFORM_STRIPE_WEBHOOK_SECRET', '')
+    },
+    'fee_percentage': 1.0  # 1% platform fee
+}
 

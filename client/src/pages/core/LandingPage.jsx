@@ -1,6 +1,5 @@
 import { lazy, Suspense } from 'react';
 import BaseLayout from '../../layout/BaseLayout';
-import BasicSEO from '../../components/SEO/BasicSEO';
 import ScrollToTopButton from '../../components/UI/ScrollToTopButton';
 import CookieConsent from '../../components/UI/CookieConsent';
 import AnnouncementBar from '../../components/UI/AnnouncementBar';
@@ -36,10 +35,7 @@ const SectionSkeleton = () => (
 const LandingPage = () => {
   return (
     <BaseLayout>
-      <BasicSEO 
-        title="Trackify - Simple Invoice & Expense Tracking for Small Businesses" 
-        description="Trackify helps freelancers and small businesses create professional invoices, track expenses, and get paid faster."
-      />
+
       <PreloadResources />
       <ScrollToTopButton />
       <CookieConsent />

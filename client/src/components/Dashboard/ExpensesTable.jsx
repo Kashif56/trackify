@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Edit, Trash2, FileText, ChevronLeft, ChevronRight, Download } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 /**
  * ExpensesTable Component
@@ -27,6 +28,10 @@ const ExpensesTable = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [sortField, setSortField] = useState('date');
   const [sortDirection, setSortDirection] = useState('desc');
+  
+  // Get user's currency preference from Redux store
+  const { user } = useSelector(state => state.user);
+  const userCurrency = user?.profile?.currency || 'pkr';
 
   
   const itemsPerPage = isFullPage ? 10 : 5;
@@ -170,7 +175,7 @@ const ExpensesTable = ({
                     {new Date(expense.date).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-800">
-                    ${parseFloat(expense.amount).toFixed(2)}
+                    {userCurrency === 'pkr' ? 'Rs ' : '$'}{parseFloat(expense.amount).toFixed(2)}
                   </td>
                   {isFullPage && (
                     <td className="px-6 py-4 max-w-xs truncate text-gray-600">

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import { Edit2, Save, X, Upload, AlertCircle, Camera, Mail, Phone, Building2, MapPin, Globe, Hash, User } from 'lucide-react';
+import { Edit2, Save, X, Upload, AlertCircle, Camera, Mail, Phone, Building2, MapPin, Globe, Hash, User, DollarSign, CreditCard } from 'lucide-react';
 import DashboardLayout from '../../layout/DashboardLayout';
 import profileApi from '../../api/profileApi';
+import { updateProfile as updateProfileAction } from '../../redux/slices/userSlice';
 
 const ProfilePage = () => {
   const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
@@ -34,6 +36,8 @@ const ProfilePage = () => {
           state: data.profile?.state || '',
           country: data.profile?.country || '',
           zip_code: data.profile?.zip_code || '',
+          currency: data.profile?.currency || 'pkr',
+          allow_platform_gateway: data.profile?.allow_platform_gateway || false,
         });
       } catch (error) {
         console.error('Error fetching profile data:', error);
@@ -49,10 +53,10 @@ const ProfilePage = () => {
 
   // Handle input changes
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
     
     // Clear error for this field when user starts typing
@@ -148,7 +152,7 @@ const ProfilePage = () => {
       const updatedProfile = await profileApi.updateProfile(formData);
       
       // Update local state
-      setProfileData({
+      const updatedProfileData = {
         ...profileData,
         ...formData,
         profile: {
@@ -160,8 +164,15 @@ const ProfilePage = () => {
           state: formData.state,
           country: formData.country,
           zip_code: formData.zip_code,
+          currency: formData.currency,
+          allow_platform_gateway: formData.allow_platform_gateway,
         },
-      });
+      };
+      
+      setProfileData(updatedProfileData);
+      
+      // Update Redux store
+      dispatch(updateProfileAction(updatedProfileData));
       
       setEditMode(false);
       toast.success('Profile updated successfully');
@@ -188,6 +199,8 @@ const ProfilePage = () => {
         state: profileData.profile?.state || '',
         country: profileData.profile?.country || '',
         zip_code: profileData.profile?.zip_code || '',
+        currency: profileData.profile?.currency || 'pkr',
+        allow_platform_gateway: profileData.profile?.allow_platform_gateway || false,
       });
       setProfilePicture(null);
       setPreviewUrl(null);
@@ -388,6 +401,67 @@ const ProfilePage = () => {
                 {renderField('ZIP/Postal Code', profileData?.profile?.zip_code, 'zip_code', <Hash />)}
               </div>
               
+              <h3 className="text-xl font-bold text-gray-800 mt-10 mb-6 flex items-center">
+                <span className="bg-[#F97316] bg-opacity-10 p-2 rounded-lg mr-3">
+                  <DollarSign className="h-5 w-5 text-[#F97316]" />
+                </span>
+                Currency & Payment Settings
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-600 mb-2">Currency</label>
+                  {editMode ? (
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <DollarSign className="h-5 w-5 text-gray-400" />
+                      </div>
+                      <select
+                        name="currency"
+                        value={formData.currency || 'pkr'}
+                        onChange={handleInputChange}
+                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F97316] focus:border-[#F97316] bg-white shadow-sm transition-colors"
+                      >
+                        <option value="pkr">PKR - Pakistani Rupee</option>
+                        <option value="usd">USD - US Dollar</option>
+                      </select>
+                    </div>
+                  ) : (
+                    <div className="flex items-center">
+                      <DollarSign className="h-5 w-5 text-gray-400 mr-2" />
+                      <p className="text-gray-800 py-2 text-lg">
+                        {profileData?.profile?.currency === 'usd' ? 'USD - US Dollar' : 'PKR - Pakistani Rupee'}
+                      </p>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-600 mb-2">Payment Gateway Settings</label>
+                  {editMode ? (
+                    <div className="flex items-center mt-2">
+                      <input
+                        type="checkbox"
+                        id="allow_platform_gateway"
+                        name="allow_platform_gateway"
+                        checked={formData.allow_platform_gateway || false}
+                        onChange={handleInputChange}
+                        className="w-5 h-5 text-[#F97316] border-gray-300 rounded focus:ring-[#F97316]"
+                      />
+                      <label htmlFor="allow_platform_gateway" className="ml-2 text-gray-700">
+                        Allow platform payment gateway
+                      </label>
+                    </div>
+                  ) : (
+                    <div className="flex items-center">
+                      <CreditCard className="h-5 w-5 text-gray-400 mr-2" />
+                      <p className="text-gray-800 py-2 text-lg">
+                        {profileData?.profile?.allow_platform_gateway ? 'Platform gateway enabled' : 'Platform gateway disabled'}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               {editMode && (
                 <div className="mt-10 pt-6 border-t border-gray-100">
                   <div className="flex justify-end">

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, Sector } from 'recharts';
 import { getInvoiceStatusBreakdown } from '../../../api/analyticsApi';
 import { toast } from 'react-toastify';
@@ -9,6 +10,11 @@ const InvoiceStatusBreakdown = () => {
   const [error, setError] = useState(null);
   const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' });
   const [showDateFilter, setShowDateFilter] = useState(false);
+  
+  // Get user's currency preference from Redux store
+  const { user } = useSelector(state => state.user);
+  const userCurrency = user?.profile?.currency || 'pkr';
+  const currencyCode = userCurrency === 'pkr' ? 'PKR' : 'USD';
 
   useEffect(() => {
     fetchBreakdownData();
@@ -85,7 +91,7 @@ const InvoiceStatusBreakdown = () => {
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: currencyCode,
       maximumFractionDigits: 0
     }).format(value);
   };
@@ -287,7 +293,7 @@ const InvoiceStatusBreakdown = () => {
                       <p className={`text-lg font-bold ${colorClasses.textColor}`}>
                         {new Intl.NumberFormat('en-US', {
                           style: 'currency',
-                          currency: 'USD',
+                          currency: currencyCode,
                         }).format(item.total)}
                       </p>
                     </div>

@@ -12,6 +12,7 @@ urlpatterns = [
     path('api/analytic/', include('analytics.urls')),
     path('api/users/', include('users.urls')),
     path('api/client/', include('clients.urls')),
+    path('api/payment/', include('payment.urls')),
 ]
 
 

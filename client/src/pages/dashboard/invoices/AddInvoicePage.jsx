@@ -60,6 +60,11 @@ const AddInvoicePage = () => {
   
   // Get current user data
   const userData = useSelector(state => state.auth?.user) || {};
+  
+  // Get user's currency preference
+  const { user } = useSelector(state => state.user);
+  const userCurrency = user?.profile?.currency || 'pkr';
+  const currencySymbol = userCurrency === 'pkr' ? 'Rs ' : '$';
 
   // Fetch clients on component mount
   useEffect(() => {
@@ -375,7 +380,7 @@ const AddInvoicePage = () => {
                         <td className="px-4 py-3">
                           <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                              <span className="text-gray-500">$</span>
+                              <span className="text-gray-500">{currencySymbol}</span>
                             </div>
                             <input
                               type="number"
@@ -388,7 +393,7 @@ const AddInvoicePage = () => {
                           </div>
                         </td>
                         <td className="px-4 py-3 font-medium text-gray-800">
-                          ${(item.quantity * item.price).toFixed(2)}
+                          {currencySymbol}{(item.quantity * item.price).toFixed(2)}
                         </td>
                         <td className="px-4 py-3">
                           <button
@@ -418,7 +423,7 @@ const AddInvoicePage = () => {
                       <div className="mt-6 border-t border-gray-100 pt-4">
                 <div className="flex justify-between py-2">
                   <span className="text-gray-600">Subtotal:</span>
-                  <span className="font-medium text-gray-800">${subtotal.toFixed(2)}</span>
+                  <span className="font-medium text-gray-800">{currencySymbol}{subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between items-center py-2">
                   <label htmlFor="tax_rate" className="text-gray-600">Tax Rate (%):</label>
@@ -434,11 +439,11 @@ const AddInvoicePage = () => {
                 </div>
                 <div className="flex justify-between py-2">
                   <span className="text-gray-600">Tax Amount:</span>
-                  <span className="font-medium text-gray-800">${taxAmount.toFixed(2)}</span>
+                  <span className="font-medium text-gray-800">{currencySymbol}{taxAmount.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between py-2 text-lg font-semibold">
                   <span className="text-gray-800">Total:</span>
-                  <span className="text-gray-900">${total.toFixed(2)}</span>
+                  <span className="text-gray-900">{currencySymbol}{total.toFixed(2)}</span>
                 </div>
               </div>
             </div>

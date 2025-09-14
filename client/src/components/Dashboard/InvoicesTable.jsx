@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Eye, Edit, Trash2, Download } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 /**
  * InvoicesTable Component
@@ -25,6 +26,9 @@ const InvoicesTable = ({
   onDownloadInvoice,
   isFullPage = false
 }) => {
+  // Get user's currency preference from Redux store
+  const { user } = useSelector(state => state.user);
+  const userCurrency = user?.profile?.currency || 'pkr';
   // Function to render status badge with appropriate color
   const renderStatusBadge = (status) => {
     let bgColor = '';
@@ -115,7 +119,7 @@ const InvoicesTable = ({
                     {new Date(invoice.due_date).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-800">
-                    ${parseFloat(invoice.total).toFixed(2)}
+                    {userCurrency === 'pkr' ? 'Rs ' : '$'}{parseFloat(invoice.total).toFixed(2)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {renderStatusBadge(invoice.status)}

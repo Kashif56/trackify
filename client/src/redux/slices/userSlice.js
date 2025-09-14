@@ -86,6 +86,14 @@ const userSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
+    updateProfile: (state, action) => {
+      state.user = {
+        ...state.user,
+        ...action.payload
+      };
+      // If profile is updated, also update the localStorage
+      localStorage.setItem('user', JSON.stringify(state.user));
+    },
   },
 });
 
@@ -102,6 +110,7 @@ export const {
   updateTokens,
   logout,
   clearError,
+  updateProfile,
 } = userSlice.actions;
 
 export default userSlice.reducer;
