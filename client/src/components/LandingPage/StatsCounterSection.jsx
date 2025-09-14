@@ -40,7 +40,7 @@ const StatItem = ({ icon, value, label, suffix = '', prefix = '', delay = 0 }) =
   
   return (
     <motion.div 
-      className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md"
+      className="flex flex-col items-center p-6 bg-white border border-gray-200 rounded-lg shadow-sm"
       ref={ref}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -51,7 +51,7 @@ const StatItem = ({ icon, value, label, suffix = '', prefix = '', delay = 0 }) =
       <div className="p-3 bg-orange-100 rounded-full mb-4">
         {icon}
       </div>
-      <h3 className="text-4xl font-bold text-text-primary">
+      <h3 className="text-4xl font-bold">
         {prefix}{count.toLocaleString()}{suffix}
       </h3>
       <p className="mt-2 text-text-secondary">{label}</p>
@@ -98,7 +98,7 @@ const StatsCounterSection = () => {
   ];
 
   return (
-    <section className="py-16 bg-neutral-light" ref={ref}>
+    <section className="py-16" ref={ref}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-center mb-12"

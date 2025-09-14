@@ -12,7 +12,6 @@ const plans = [
     features: [
       'Up to 3 invoices per month',
       'Unlimited expenses',
-      'Basic reporting',
       'Email support',
     ],
     cta: 'Get Started',
@@ -23,10 +22,10 @@ const plans = [
     price: '10',
     description: 'For growing freelancers and small businesses',
     features: [
-      'Unlimited invoices',
+      'Upto 30 invoices per month',
       'Unlimited expenses',
-      'Advanced reporting',
-      'Client portal',
+      'Analytics and reporting',
+      'Email Notifications',
       'Priority support',
     ],
     cta: 'Start Free Trial',
@@ -37,11 +36,12 @@ const plans = [
     price: '20',
     description: 'For established businesses with multiple users',
     features: [
-      'Everything in Pro',
-      'Multi-user access',
+      'Unlimited invoices',
+      'Unlimited expenses',
+      'Analytics and reporting',
       'Custom branding',
-      'API access',
       'Dedicated support',
+      'Email Notifications',
     ],
     cta: 'Contact Sales',
     highlighted: false,
@@ -73,54 +73,57 @@ const PricingSection = () => {
       },
     },
   };
-
+  
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
   };
 
   return (
-    <div className="bg-white py-24 sm:py-32" id="pricing" ref={ref}>
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <section id="pricing" className="py-16 bg-white" ref={ref}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 
-          className="mx-auto max-w-2xl text-center"
+          className="text-center mb-12"
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.5 }}
         >
-          <h2 className="text-base font-semibold leading-7 text-[#F97316]">Pricing</h2>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-[#1F2937] sm:text-4xl">
-            Simple, transparent pricing
+          <h2 className="text-3xl font-bold text-text-primary sm:text-4xl">
+            Simple, Transparent Pricing
+          </h2>
+          <p className="mt-4 text-lg text-text-secondary max-w-2xl mx-auto">
+            Choose the plan that works best for your business needs
           </p>
-          <p className="mt-6 text-lg leading-8 text-[#4B5563]">
-            Choose the plan that's right for your business. All plans include a 14-day free trial.
-          </p>
+        </motion.div>
 
-          {/* Billing toggle */}
-          <div className="mt-10 flex justify-center items-center space-x-4">
-            <span className={`text-sm ${billingCycle === 'monthly' ? 'text-[#1F2937] font-medium' : 'text-[#4B5563]'}`}>Monthly</span>
-            <button 
-              onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'annual' : 'monthly')}
-              className="relative inline-flex h-6 w-12 items-center rounded-full bg-gray-200"
-            >
-              <span className="sr-only">Toggle billing cycle</span>
-              <span 
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${billingCycle === 'annual' ? 'translate-x-7' : 'translate-x-1'}`}
-              />
-            </button>
-            <span className={`text-sm ${billingCycle === 'annual' ? 'text-[#1F2937] font-medium' : 'text-[#4B5563]'}`}>Annual</span>
-            <span className="ml-2 inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-              Save 20%
-            </span>
+        <motion.div
+          className="text-center py-16 px-6 bg-gray-50 rounded-2xl border border-gray-200 shadow-sm max-w-3xl mx-auto"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <div className="inline-flex items-center justify-center p-3 bg-blue-100 rounded-full mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
           </div>
+          
+          <h3 className="text-2xl font-bold text-gray-900 mb-3">Pricing Coming Soon!</h3>
+          <p className="text-lg text-gray-600 mb-8 max-w-lg mx-auto">
+            We're currently finalizing our pricing plans to provide you with the best value. 
+            Sign up today to create your first invoice and you will be notified when our pricing plans are available.
+          </p>
+          
+          <Link 
+            to="/register" 
+            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-[#F97316] hover:bg-[#EA580C] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F97316] transition-colors"
+          >
+            Create Your First Invoice
+          </Link>
         </motion.div>
         
-        <motion.div 
-          className="mx-auto mt-16 grid max-w-lg grid-cols-1 items-start gap-8 sm:mt-20 lg:max-w-none lg:grid-cols-3"
-          variants={containerVariants}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-        >
+        {/* Hidden pricing plans section - will be shown later */}
+        <motion.div className="hidden">
           {plans.map((plan, planIdx) => (
             <motion.div
               key={plan.name}
@@ -242,11 +245,10 @@ const PricingSection = () => {
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 0.6 }}
         >
-          <h3 className="text-lg font-semibold text-[#1F2937]">Frequently Asked Questions</h3>
-          <p className="mt-2 text-[#4B5563]">Have questions about our pricing? <a href="/contact" className="text-[#F97316] hover:text-[#EA580C]">Contact our sales team</a></p>
+         
         </motion.div>
       </div>
-    </div>
+    </section>
   );
 };
 

@@ -14,13 +14,13 @@ const CTABanner = () => {
       <div className="absolute inset-0 bg-gradient-to-r from-primary to-orange-500"></div>
       <div className="absolute inset-0 opacity-10">
         <svg className="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <defs>
+            <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+              <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" strokeWidth="0.5" />
+            </pattern>
+          </defs>
           <path d="M0,0 L100,0 L100,100 L0,100 Z" fill="url(#grid)" />
         </svg>
-        <defs>
-          <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" strokeWidth="0.5" />
-          </pattern>
-        </defs>
       </div>
       
       <div className="relative max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">

@@ -10,10 +10,7 @@
     --color-status-error: #EF4444;
     --color-status-success: #10B981;
     --color-status-warning: #FBBF24;
-  }
-
-
-
+}
 
 @media print {
   /* Hide everything by default */

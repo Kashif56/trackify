@@ -56,14 +56,15 @@ const Navbar = ({ toggleSidebar, isSidebarCollapsed }) => {
           </div>
           <div className="flex items-center">
             <div className="hidden lg:flex items-center">
+            {user?.profile?.currency && (
+                <span className="text-sm font-medium bg-gray-100 text-gray-700 px-3 py-1 rounded-full mr-3">
+                  {user.profile.currency === 'pkr' ? 'PKR' : 'USD'}
+                </span>
+              )}
               <span className="text-base font-normal text-gray-500 mr-5">
                 Welcome, {user?.first_name || user?.username || 'User'}
               </span>
-              {user?.profile?.currency && (
-                <span className="text-sm font-medium bg-gray-100 text-gray-700 px-3 py-1 rounded-full mr-3">
-                  {user.profile.currency === 'pkr' ? 'PKR (Rs)' : 'USD ($)'}
-                </span>
-              )}
+              
             </div>
             
             {/* Profile dropdown */}

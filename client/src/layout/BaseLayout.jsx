@@ -147,7 +147,7 @@ const Footer = () => {
           <div className="col-span-1 md:col-span-1">
             <Link to="/" className="flex items-center">
               <img src={logo} alt="Trackifye Logo" className="h-8 w-auto mr-2" />
-              <span className="text-xl font-bold text-[#F97316]">Trackifye</span>
+           
             </Link>
             <p className="mt-2 text-sm text-[#4B5563]">
               Simple and affordable invoice & expense tracking for freelancers and small businesses.
