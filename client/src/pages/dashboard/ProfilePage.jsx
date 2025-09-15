@@ -319,7 +319,7 @@ const ProfilePage = () => {
                       />
                     ) : profileData?.profile?.profile_picture ? (
                       <img
-                        src={`http://localhost:8000/${profileData?.profile?.profile_picture}`}
+                        src={`https://trackifye.vercel.app/${profileData?.profile?.profile_picture}`}
                         alt="Profile"
                         className="w-full h-full object-cover"
                       />

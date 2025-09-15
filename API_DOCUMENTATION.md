@@ -15,7 +15,7 @@ Trackify uses JWT (JSON Web Tokens) for authentication. All protected endpoints 
 
 ### Base URL
 ```
-http://localhost:8000/api/
+https://trackifye.vercel.app/api/
 ```
 
 ### Headers

@@ -262,7 +262,7 @@ const InvoicePDF = ({ invoice, user, client, bankDetails }) => {
           <View style={{ alignItems: 'flex-end' }}>
             {user?.profile_picture && (
                 <Image
-                    src={`http://localhost:8000/${user.profile_picture}`}
+                    src={`https://trackifye.vercel.app/${user.profile_picture}`}
                     style={styles.logo}
                 />
                 )}

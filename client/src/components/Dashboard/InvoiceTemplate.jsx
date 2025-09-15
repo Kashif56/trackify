@@ -169,7 +169,7 @@ const InvoiceTemplate = ({
             {user?.profile_picture ? (
               <div className="h-16 w-auto mb-2 rounded-md overflow-hidden flex items-center justify-end">
                 <img 
-                  src={`${user.profile_picture.startsWith('http') ? '' : 'http://localhost:8000/'}${user.profile_picture}`} 
+                  src={`${user.profile_picture.startsWith('http') ? '' : 'https://trackifye.vercel.app/'}${user.profile_picture}`} 
                   alt="Company Logo" 
                   className="h-full w-auto object-contain"
                 />
