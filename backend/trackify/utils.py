@@ -24,7 +24,7 @@ def send_email(to_email, subject, text_content=''):
         "Accept": "application/json"
     }
 
-    from_email = "Trackify <noreply@trackify.com>"
+    from_email = "Trackify <noreply@trackifye.com>"
 
     data = {
         "from": from_email,
