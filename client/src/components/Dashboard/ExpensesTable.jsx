@@ -186,9 +186,9 @@ const ExpensesTable = ({
                     <div className="flex justify-end space-x-3">
                       {expense.receipt && (
                         <a
-                          href={expense.receipt.includes('https://trackifye.vercel.app') 
+                          href={expense.receipt.includes('https://trackifye.up.railway.app') 
                             ? expense.receipt 
-                            : `https://trackifye.vercel.app${expense.receipt.startsWith('/') ? '' : '/'}${expense.receipt}`
+                            : `https://trackifye.up.railway.app${expense.receipt.startsWith('/') ? '' : '/'}${expense.receipt}`
                           }
                           target="_blank"
                           rel="noopener noreferrer"
