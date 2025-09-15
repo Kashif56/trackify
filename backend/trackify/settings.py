@@ -172,11 +172,10 @@ SIMPLE_JWT = {
 }
 
 # CORS settings
-CORS_ALLOW_ORIGINS = [
+CORS_ALLOWED_ORIGINS = [
     'https://trackifye.vercel.app',
     'https://trackifye.com',
     'http://localhost:5157',
-
 ]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = ['DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST', 'PUT']
