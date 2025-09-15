@@ -176,6 +176,15 @@ CORS_ALLOWED_ORIGINS = [
     'https://trackifye.vercel.app',
     'https://trackifye.com',
     'http://localhost:5157',
+    'https://trackifye.up.railway.app'
+]
+
+# CSRF settings
+CSRF_TRUSTED_ORIGINS = [
+    'https://trackifye.vercel.app',
+    'https://trackifye.com',
+    'http://localhost:5157',
+    'https://trackifye.up.railway.app'
 ]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = ['DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST', 'PUT']

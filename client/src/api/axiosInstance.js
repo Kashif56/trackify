@@ -1,6 +1,7 @@
 import axios from 'axios';
 import store from '../redux/store';
 import { updateTokens, logout } from '../redux/slices/userSlice';
+import Cookies from 'js-cookie';
 
 const BASE_URL = 'https://trackifye.up.railway.app/api';
 
@@ -11,13 +12,24 @@ const axiosInstance = axios.create({
   },
 });
 
-// Request interceptor to add authorization token to requests
+// Request interceptor to add authorization token and CSRF token to requests
 axiosInstance.interceptors.request.use(
   (config) => {
+    // Add JWT token if available
     const token = localStorage.getItem('access_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    // Add CSRF token if available
+    const csrfToken = Cookies.get('csrftoken');
+    if (csrfToken) {
+      config.headers['X-CSRFToken'] = csrfToken;
+    }
+    
+    // Enable credentials to include cookies in requests
+    config.withCredentials = true;
+    
     return config;
   },
   (error) => {
