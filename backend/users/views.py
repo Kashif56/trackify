@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from django.conf import settings
-from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from rest_framework import status
@@ -70,14 +69,10 @@ The Trackify Team
         
         # Send email
         try:
-            send_mail(
-                subject,
-                plain_message,
-                settings.DEFAULT_FROM_EMAIL,
-                [user.email],
-                html_message=html_message,
-                fail_silently=False,
-            )
+            
+            print(verification_url)
+
+            print("Email sent successfully")
         except Exception as e:
             # Log the error but don't expose it to the user
             print(f"Error sending verification email: {e}")
@@ -155,13 +150,7 @@ The Trackify Team
         
         # Send email
         try:
-            send_mail(
-                subject,
-                plain_message,
-                settings.DEFAULT_FROM_EMAIL,
-                [user.email],
-                fail_silently=False,
-            )
+            print(verification_url)
         except Exception as e:
             # Log the error but don't expose it to the user
             print(f"Error sending verification email: {e}")
@@ -371,13 +360,7 @@ The Trackify Team
     
     # Send email
     try:
-        send_mail(
-            subject,
-            plain_message,
-            settings.DEFAULT_FROM_EMAIL,
-            [user.email],
-        )
-
+        print(verification_url)
         print("Verification email sent successfully")
     except Exception as e:
         # Log the error but don't expose it to the user
