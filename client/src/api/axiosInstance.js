@@ -3,7 +3,9 @@ import store from '../redux/store';
 import { updateTokens, logout } from '../redux/slices/userSlice';
 import Cookies from 'js-cookie';
 
-const BASE_URL = 'https://trackifye.up.railway.app/api';
+// const BASE_URL = 'https://trackifye.up.railway.app/api';
+
+const BASE_URL = 'http://localhost:8000/api';
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,

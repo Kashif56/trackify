@@ -52,8 +52,25 @@ const InvoiceTemplate = ({
     routingNumber: '123456789'
   };
 
-  // Use provided bank details or defaults
-  const displayBankDetails = bankDetails || defaultBankDetails;
+
+  console.log("user: ", reduxUser)
+
+  const reduxUserBankAccount = {
+    account_holder_name: reduxUser.bank_account.account_holder_name,
+    iban_number: reduxUser.bank_account.iban_number,
+    bank_name: reduxUser.bank_account.bank_name,
+    swift_code: reduxUser.bank_account.swift_code,
+    ifsc_code: reduxUser.bank_account.ifsc_code
+  }
+
+  // Use bank account from user profile if available, otherwise use provided bank details or defaults
+  const displayBankDetails = user?.bank_account ? {
+    account_holder_name: user.bank_account.account_holder_name,
+    iban_number: user.bank_account.iban_number,
+    bank_name: user.bank_account.bank_name,
+    swift_code: user.bank_account.swift_code,
+    ifsc_code: user.bank_account.ifsc_code
+  } : reduxUserBankAccount;
 
   // Theme variables based on dark/light mode
   const theme = {
@@ -211,7 +228,7 @@ const InvoiceTemplate = ({
               </div>
               <div className="col-span-2 mt-4">
                 <h2 className={`text-sm font-medium ${localDarkMode ? 'text-gray-400' : 'text-gray-500'}  uppercase mb-3`}>
-                  {invoice.status && invoice.status=='unpaid' ? `Amount Due` : "Amount Paid"}</h2>
+                  Amount</h2>
                 <p className="text-2xl font-bold">
                   {currencySymbol}{invoice?.total ? parseFloat(invoice.total).toFixed(2) : '0.00'}
                 </p>
@@ -279,19 +296,19 @@ const InvoiceTemplate = ({
               <h2 className={`text-sm font-medium ${localDarkMode ? 'text-gray-300' : 'text-gray-700'} mb-3`}>Bank Account Details:</h2>
               <div className="space-y-2">
                 <p className={`text-sm ${theme.textSecondary}`}>
-                  <span className="font-medium">Account Name:</span> {displayBankDetails.accountName}
+                  <span className="font-medium">Account Name:</span> {displayBankDetails.account_holder_name}
                 </p>
                 <p className={`text-sm ${theme.textSecondary}`}>
-                  <span className="font-medium">Account Number:</span> {displayBankDetails.accountNumber}
+                  <span className="font-medium">Account Number:</span> {displayBankDetails.iban_number}
                 </p>
                 <p className={`text-sm ${theme.textSecondary}`}>
-                  <span className="font-medium">Bank Name:</span> {displayBankDetails.bankName}
+                  <span className="font-medium">Bank Name:</span> {displayBankDetails.bank_name}
                 </p>
                 <p className={`text-sm ${theme.textSecondary}`}>
-                  <span className="font-medium">SWIFT/BIC:</span> {displayBankDetails.swiftCode}
+                  <span className="font-medium">SWIFT:</span> {displayBankDetails.swift_code}
                 </p>
                 <p className={`text-sm ${theme.textSecondary}`}>
-                  <span className="font-medium">Routing Number:</span> {displayBankDetails.routingNumber}
+                  <span className="font-medium">IFSC Code:</span> {displayBankDetails.ifsc_code}
                 </p>
               </div>
             </div>

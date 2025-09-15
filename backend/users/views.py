@@ -214,10 +214,6 @@ def get_user_details(request):
     # Get user information if available
     try:
 
-        invoices = Invoice.objects.filter(user=request.user)
-        expenses = Expense.objects.filter(user=request.user)
-       
-        
         subscription = Subscription.objects.filter(user=user, status='active').first()
         if subscription:
             subscription_data = SubscriptionSerializer(subscription).data

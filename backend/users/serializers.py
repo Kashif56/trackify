@@ -1,7 +1,18 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
-from .models import UserProfile
+from .models import UserProfile, BankAccount
+
+
+
+class BankAccountSerializer(serializers.ModelSerializer):
+    """Serializer for the BankAccount model"""
+
+    
+    class Meta:
+        model = BankAccount
+        fields = ['id', 'bank_name', 'iban_number', 'ifsc_code', 'account_holder_name', 'swift_code']
+        read_only_fields = ['id']
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -13,13 +24,15 @@ class UserProfileSerializer(serializers.ModelSerializer):
                  'country', 'zip_code', 'profile_picture', 'currency', 'allow_platform_gateway']
 
 
+
 class UserSerializer(serializers.ModelSerializer):
     """Serializer for the User model with profile data"""
     profile = UserProfileSerializer(read_only=True)
+    bank_account = BankAccountSerializer(read_only=True)
     
     class Meta:
         model = User
-        fields = ['id', 'email', 'username', 'first_name', 'last_name', 'profile']
+        fields = ['id', 'email', 'username', 'first_name', 'last_name', 'profile', 'bank_account']
         read_only_fields = ['id']
 
 
@@ -58,3 +71,7 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = ['company_name', 'phone_number', 'address', 'city', 'state',
                  'country', 'zip_code', 'profile_picture', 'currency', 'allow_platform_gateway']
+
+
+
+

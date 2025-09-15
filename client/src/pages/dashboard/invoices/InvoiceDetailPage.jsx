@@ -69,6 +69,8 @@ const InvoiceDetailPage = () => {
       try {
         setLoading(true);
         const data = await invoiceService.getInvoiceById(id);
+        console.log('Invoice data:', data);
+        console.log('Invoice user data:', data.user);
         setInvoice(data);
         setError(null);
       } catch (err) {
@@ -315,13 +317,6 @@ const InvoiceDetailPage = () => {
               client={invoice.client_details}
               darkMode={darkMode}
               showThemeToggle={true}
-              bankDetails={{
-                accountName: invoice.user?.company_name || 'Your Company Account',
-                accountNumber: invoice.user?.bank_account || 'XXXX-XXXX-XXXX-XXXX',
-                bankName: invoice.user?.bank_name || 'Your Bank Name',
-                swiftCode: invoice.user?.swift_code || 'SWIFTCODE',
-                routingNumber: invoice.user?.routing_number || '123456789'
-              }}
               actions={null}
             />
           </div>
@@ -477,17 +472,10 @@ const InvoiceDetailPage = () => {
           <div className="pdf-container bg-whiterounded-b-lg shadow-sm border border-gray-200">
             <InvoiceTemplate 
               invoice={invoice}
-              user={invoice.user}
+              user={isOwner ? {...invoice.user, bank_account: user.bank_account} : invoice.user}
               client={invoice.client_details}
               darkMode={darkMode}
               showThemeToggle={false}
-              bankDetails={{
-                accountName: invoice.user?.company_name || 'Your Company Account',
-                accountNumber: invoice.user?.bank_account || 'XXXX-XXXX-XXXX-XXXX',
-                bankName: invoice.user?.bank_name || 'Your Bank Name',
-                swiftCode: invoice.user?.swift_code || 'SWIFTCODE',
-                routingNumber: invoice.user?.routing_number || '123456789'
-              }}
               actions={null}
             />
           </div>

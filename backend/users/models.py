@@ -72,3 +72,17 @@ class EmailVerification(models.Model):
     @property
     def is_expired(self):
         return timezone.now() > self.expires_at
+
+
+
+class BankAccount(models.Model):
+    """Model for bank account details"""
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='bank_account')
+    bank_name = models.CharField(max_length=255)
+    iban_number = models.CharField(max_length=255)
+    ifsc_code = models.CharField(max_length=255)
+    account_holder_name = models.CharField(max_length=255)
+    swift_code = models.CharField(max_length=255)
+    
+    def __str__(self):
+        return self.user.email

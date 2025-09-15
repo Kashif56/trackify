@@ -94,6 +94,22 @@ const userSlice = createSlice({
       // If profile is updated, also update the localStorage
       localStorage.setItem('user', JSON.stringify(state.user));
     },
+    updateBankAccount: (state, action) => {
+      state.user = {
+        ...state.user,
+        bank_account: action.payload
+      };
+      // Update localStorage with the new bank account data
+      localStorage.setItem('user', JSON.stringify(state.user));
+    },
+    deleteBankAccount: (state) => {
+      if (state.user) {
+        const updatedUser = { ...state.user };
+        delete updatedUser.bank_account;
+        state.user = updatedUser;
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+      }
+    },
   },
 });
 
@@ -111,6 +127,8 @@ export const {
   logout,
   clearError,
   updateProfile,
+  updateBankAccount,
+  deleteBankAccount,
 } = userSlice.actions;
 
 export default userSlice.reducer;

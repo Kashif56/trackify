@@ -1,6 +1,7 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 from . import views
+from . import views_bank_account
 
 
 urlpatterns = [
@@ -20,4 +21,7 @@ urlpatterns = [
     
     # Dashboard
     path('dashboard/', views.get_dashboard_data, name='dashboard_data'),
+    
+    # Bank Account
+    path('bank-account/', views_bank_account.BankAccountView.as_view(), name='bank_account'),
 ]

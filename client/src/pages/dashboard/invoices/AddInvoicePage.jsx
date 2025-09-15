@@ -342,24 +342,24 @@ const AddInvoicePage = () => {
             </div>
             
             {/* Invoice Items */}
-            <div className="p-6 border-b border-gray-100">
+            <div className="p-4 border-b border-gray-100">
               <h2 className="text-xl font-semibold text-gray-800 mb-4">Invoice Items</h2>
               
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-600 border-collapse">
                   <thead>
                     <tr className="bg-gray-50 border-b border-gray-100">
-                      <th scope="col" className="px-4 py-3 font-medium text-gray-700">Description</th>
+                      <th scope="col" className="px-4 py-3 font-medium text-gray-700 w-75">Description</th>
                       <th scope="col" className="px-4 py-3 font-medium text-gray-700 w-24">Quantity</th>
-                      <th scope="col" className="px-4 py-3 font-medium text-gray-700 w-32">Price</th>
-                      <th scope="col" className="px-4 py-3 font-medium text-gray-700 w-32">Total</th>
-                      <th scope="col" className="px-4 py-3 font-medium text-gray-700 w-16"></th>
+                      <th scope="col" className="px-4 py-3 font-medium text-gray-700 w-24">Price</th>
+                      <th scope="col" className="px-4 py-3 font-medium text-gray-700 w-24">Total</th>
+                      <th scope="col" className="px-4 py-3 font-medium text-gray-700 w-[4]"></th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
                     {formData.items.map((item) => (
                       <tr key={item.id} className="bg-white">
-                        <td className="px-4 py-3">
+                        <td className="py-3">
                           <input
                             type="text"
                             value={item.description}
@@ -377,10 +377,10 @@ const AddInvoicePage = () => {
                             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F97316] focus:border-transparent"
                           />
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="py-3">
                           <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                              <span className="text-gray-500">{currencySymbol}</span>
+                              <span className="text-gray-500">{currencySymbol} </span>
                             </div>
                             <input
                               type="number"
@@ -526,13 +526,8 @@ const AddInvoicePage = () => {
                   })),
                   status: 'draft'
                 }}
-                showThemeToggle={true}
-                user={{
-                  profile_picture: userData.profile_picture,
-                  company_name: userData.company_name || 'Your Company Name',
-                  email: userData.email || 'your.email@example.com',
-                  address: userData.address || 'Your Address'
-                }}
+                showThemeToggle={false}
+                user={user}
                 client={selectedClient ? {
                   name: selectedClient.name,
                   email: selectedClient.email,
@@ -540,16 +535,8 @@ const AddInvoicePage = () => {
                   company_name: selectedClient.company_name,
                   phone_number: selectedClient.phone_number
                 } : null}
-                darkMode={darkMode}
-                actions={
-                  <button
-                    type="button"
-                    className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-colors"
-                    aria-label="Print invoice"
-                  >
-                    <Printer className="w-5 h-5" />
-                  </button>
-                }
+                darkMode={false}
+               
               />
 
             </div>
