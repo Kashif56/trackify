@@ -21,6 +21,7 @@ from expense.serializers import ExpenseSerializer
 from django.db.models import Sum
 from django.utils import timezone
 from datetime import timedelta
+from trackify.utils import send_email
 
 
 @api_view(['POST'])
@@ -43,17 +44,8 @@ def register_user(request):
         # Email subject
         subject = 'Verify your Trackify account'
         
-        # Email message
-        html_message = render_to_string('email_verification.html', {
-            'user': user,
-            'verification_url': verification_url,
-            'expiry_hours': 24
-        })
-        plain_message = strip_tags(html_message)
-        
-        # Fallback to plain text if HTML template is not found
-        if not html_message or html_message == plain_message:
-            plain_message = f"""Hello {user.first_name},
+    
+        plain_message = f"""Hello {user.first_name},
 
 Thank you for registering with Trackify. Please verify your email address by clicking the link below:
 
@@ -69,9 +61,7 @@ The Trackify Team
         
         # Send email
         try:
-            
-            print(verification_url)
-
+            send_email(user.email, subject, plain_message)
             print("Email sent successfully")
         except Exception as e:
             # Log the error but don't expose it to the user
@@ -150,7 +140,8 @@ The Trackify Team
         
         # Send email
         try:
-            print(verification_url)
+            send_email(user.email, subject, plain_message)
+            print("Email sent successfully")
         except Exception as e:
             # Log the error but don't expose it to the user
             print(f"Error sending verification email: {e}")
@@ -360,7 +351,7 @@ The Trackify Team
     
     # Send email
     try:
-        print(verification_url)
+        send_email(user.email, subject, plain_message)
         print("Verification email sent successfully")
     except Exception as e:
         # Log the error but don't expose it to the user
