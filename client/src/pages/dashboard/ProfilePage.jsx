@@ -373,7 +373,7 @@ const ProfilePage = () => {
             <div className="bg-white shadow-lg rounded-2xl p-8">
               <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
                 <span className="bg-[#F97316] bg-opacity-10 p-2 rounded-lg mr-3">
-                  <User className="h-5 w-5 text-[#F97316]" />
+                  <User className="h-5 w-5 text-neutral-100" />
                 </span>
                 General Information
               </h3>
@@ -387,7 +387,7 @@ const ProfilePage = () => {
 
               <h3 className="text-xl font-bold text-gray-800 mt-10 mb-6 flex items-center">
                 <span className="bg-[#F97316] bg-opacity-10 p-2 rounded-lg mr-3">
-                  <MapPin className="h-5 w-5 text-[#F97316]" />
+                  <MapPin className="h-5 w-5 text-neutral-100" />
                 </span>
                 Address Information
               </h3>
@@ -403,7 +403,7 @@ const ProfilePage = () => {
               
               <h3 className="text-xl font-bold text-gray-800 mt-10 mb-6 flex items-center">
                 <span className="bg-[#F97316] bg-opacity-10 p-2 rounded-lg mr-3">
-                  <DollarSign className="h-5 w-5 text-[#F97316]" />
+                  <DollarSign className="h-5 w-5 text-neutral-100" />
                 </span>
                 Currency & Payment Settings
               </h3>

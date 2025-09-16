@@ -7,7 +7,7 @@ import {
   Menu, X, ChevronDown, Sun, Moon, 
   Home, FileText, DollarSign, Users, 
   Settings, LogOut, BarChart2,
-  ChevronLeft, ChevronRight, CreditCard
+  ChevronLeft, ChevronRight, CreditCard, LayoutDashboard
 } from 'lucide-react';
 import logo from '../assets/logo.svg';
 
@@ -116,7 +116,8 @@ const Sidebar = ({ isCollapsed }) => {
   const location = useLocation();
   
   const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: Home },
+    { name: 'Home', href: '/', icon: Home },
+    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { name: 'Invoices', href: '/invoices', icon: FileText },
     { name: 'Expenses', href: '/expenses', icon: DollarSign },
     { name: 'Clients', href: '/clients', icon: Users },
