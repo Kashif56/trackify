@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import BaseLayout from '../../layout/BaseLayout';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { toast } from 'react-toastify';
+import { sendContactMessage } from '../../api/contactApi';
 
 const ContactPage = () => {
   const [form_data, set_form_data] = useState({
@@ -9,6 +11,8 @@ const ContactPage = () => {
     subject: '',
     message: ''
   });
+  const [loading, set_loading] = useState(false);
+  const [status, set_status] = useState(null); // 'success', 'error', or null
 
   const handle_change = (e) => {
     const { name, value } = e.target;
@@ -16,33 +20,50 @@ const ContactPage = () => {
       ...prev,
       [name]: value
     }));
+    // Reset status when user starts typing again
+    if (status) set_status(null);
   };
 
-  const handle_submit = (e) => {
+  const handle_submit = async (e) => {
     e.preventDefault();
-    // Form submission logic would go here
-    console.log('Form submitted:', form_data);
-    // Reset form after submission
-    set_form_data({
-      name: '',
-      email: '',
-      subject: '',
-      message: ''
-    });
-    // Show success message (would use react-toastify in a real implementation)
-    alert('Message sent successfully!');
+    set_loading(true);
+    set_status(null);
+    
+    try {
+      await sendContactMessage(form_data);
+      
+      // Reset form after successful submission
+      set_form_data({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      });
+      
+      set_status('success');
+      toast.success('Message sent successfully! We will get back to you soon.');
+    } catch (error) {
+      console.error('Error sending message:', error);
+      set_status('error');
+      toast.error(error.error || 'Failed to send message. Please try again later.');
+    } finally {
+      set_loading(false);
+    }
   };
 
   return (
     <BaseLayout>
-      <div className="bg-white py-24 sm:py-32">
+      <div className="bg-gradient-to-b from-white to-indigo-50 py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+            <div className="inline-flex items-center justify-center px-4 py-1 mb-6 rounded-full bg-indigo-100 text-indigo-700">
+              <span className="text-sm font-medium">Get in Touch</span>
+            </div>
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
               Contact Us
             </h1>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              Have questions or need help? We're here for you.
+              Have questions or need help? We're here for you. Our team is ready to assist with any inquiries you may have.
             </p>
           </div>
           
@@ -90,7 +111,7 @@ const ContactPage = () => {
             </div>
             
             {/* Contact Form */}
-            <div className="rounded-2xl bg-white p-8 shadow-lg ring-1 ring-gray-200">
+            <div className="rounded-2xl bg-white p-8 shadow-xl ring-1 ring-gray-200 hover:shadow-2xl transition-all duration-300">
               <h2 className="text-2xl font-bold text-gray-900">Send us a message</h2>
               <form onSubmit={handle_submit} className="mt-6 space-y-6">
                 <div>
@@ -156,11 +177,46 @@ const ContactPage = () => {
                 <div>
                   <button
                     type="submit"
-                    className="flex w-full items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    disabled={loading}
+                    className={`flex w-full items-center justify-center rounded-md px-3 py-3 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all duration-300 ${loading ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-500'}`}
                   >
-                    Send Message <Send className="ml-2 h-4 w-4" />
+                    {loading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sending...
+                      </>
+                    ) : status === 'success' ? (
+                      <>
+                        <CheckCircle className="mr-2 h-4 w-4" /> Message Sent
+                      </>
+                    ) : status === 'error' ? (
+                      <>
+                        <AlertCircle className="mr-2 h-4 w-4" /> Try Again
+                      </>
+                    ) : (
+                      <>
+                        Send Message <Send className="ml-2 h-4 w-4" />
+                      </>
+                    )}
                   </button>
                 </div>
+                
+                {status === 'success' && (
+                  <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
+                    <p className="text-sm text-green-700 flex items-center">
+                      <CheckCircle className="h-4 w-4 mr-2" />
+                      Your message has been sent successfully! We'll get back to you soon.
+                    </p>
+                  </div>
+                )}
+                
+                {status === 'error' && (
+                  <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                    <p className="text-sm text-red-700 flex items-center">
+                      <AlertCircle className="h-4 w-4 mr-2" />
+                      There was an error sending your message. Please try again.
+                    </p>
+                  </div>
+                )}
               </form>
             </div>
           </div>

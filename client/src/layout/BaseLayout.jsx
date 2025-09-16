@@ -57,9 +57,9 @@ const Navbar = () => {
           
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:space-x-6">
-            <Link to="/" className="text-[#1F2937] hover:text-[#F97316] px-3 py-2 text-sm font-medium transition-colors duration-200">
+            <ScrollLink to="hero" smooth={true} duration={500} offset={-80} className="text-[#1F2937] hover:text-[#F97316] px-3 py-2 text-sm font-medium transition-colors duration-200 cursor-pointer">
               Home
-            </Link>
+            </ScrollLink>
             <ScrollLink to="features" smooth={true} duration={500} offset={-80} className="text-[#1F2937] hover:text-[#F97316] px-3 py-2 text-sm font-medium cursor-pointer transition-colors duration-200" style={{ zIndex: 10, position: 'relative' }}>
               Features
             </ScrollLink>

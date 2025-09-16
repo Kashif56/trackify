@@ -2,6 +2,7 @@ from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 from . import views
 from . import views_bank_account
+from . import contact_views
 
 
 urlpatterns = [
@@ -24,4 +25,7 @@ urlpatterns = [
     
     # Bank Account
     path('bank-account/', views_bank_account.BankAccountView.as_view(), name='bank_account'),
+    
+    # Contact Form
+    path('contact/', contact_views.contact_form, name='contact_form'),
 ]
