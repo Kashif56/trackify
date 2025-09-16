@@ -197,7 +197,6 @@ CORS_EXPOSE_HEADERS = ['content-disposition']
 
 # Media files
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
 
 # Setup Static Files
 # URL to access static files
