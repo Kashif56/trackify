@@ -42,10 +42,8 @@ class Invoice(models.Model):
             year_month = today.strftime('%Y-%m')
             
             # Get the latest invoice number for this user and month
-            latest_invoice = Invoice.objects.filter(
-                user=self.user,
-                invoice_number__startswith=f'INV-{year_month}'
-            ).order_by('-invoice_number').first()
+            latest_invoice = Invoice.objects.latest('invoice_number')
+
             
             if latest_invoice:
                 # Extract the last number and increment
