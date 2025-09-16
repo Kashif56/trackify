@@ -10,6 +10,7 @@ import {
   ChevronLeft, ChevronRight, CreditCard, LayoutDashboard, WalletCards
 } from 'lucide-react';
 import logo from '../assets/logo.svg';
+import MobileWarning from '../components/UI/MobileWarning';
 
 const Navbar = ({ toggleSidebar, isSidebarCollapsed }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -180,6 +181,7 @@ const DashboardLayout = ({ children }) => {
           {children}
         </div>
       </div>
+      <MobileWarning />
     </div>
   );
 };

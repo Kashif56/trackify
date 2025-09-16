@@ -11,7 +11,6 @@ import InvoiceTemplateTest from './components/Dashboard/InvoiceTemplateTest';
 import LandingPage from './pages/core/LandingPage';
 import FeaturesPage from './pages/core/FeaturesPage';
 import PricingPage from './pages/core/PricingPage';
-import ContactPage from './pages/core/ContactPage';
 
 // Auth Pages
 import Login from './pages/users/Login';
@@ -51,7 +50,6 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/features" element={<FeaturesPage />} />
         <Route path="/pricing" element={<PricingPage />} />
-        <Route path="/contact" element={<ContactPage />} />
         
         {/* Auth Routes */}
         <Route path="/login" element={<Login />} />

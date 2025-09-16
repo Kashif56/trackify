@@ -10,13 +10,13 @@ import HeroSection from '../../components/LandingPage/HeroSection';
 
 // Lazy loaded components (below the fold)
 const FeaturesSection = lazy(() => import('../../components/LandingPage/FeaturesSection'));
-
 const HowItWorksSection = lazy(() => import('../../components/LandingPage/HowItWorksSection'));
 const StatsCounterSection = lazy(() => import('../../components/LandingPage/StatsCounterSection'));
 const TestimonialsSection = lazy(() => import('../../components/LandingPage/TestimonialsSection'));
 const SuccessStoriesSection = lazy(() => import('../../components/LandingPage/SuccessStoriesSection'));
 const CTABanner = lazy(() => import('../../components/LandingPage/CTABanner'));
 const PricingSection = lazy(() => import('../../components/LandingPage/PricingSection'));
+const ContactSection = lazy(() => import('../../components/LandingPage/ContactSection'));
 
 
 // Loading skeleton component
@@ -74,6 +74,12 @@ const LandingPage = () => {
       <Suspense fallback={<SectionSkeleton />}>
         <div id="pricing">
           <PricingSection />
+        </div>
+      </Suspense>
+      
+      <Suspense fallback={<SectionSkeleton />}>
+        <div id="contact">
+          <ContactSection />
         </div>
       </Suspense>
 

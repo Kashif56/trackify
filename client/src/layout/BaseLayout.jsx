@@ -17,6 +17,19 @@ const Navbar = () => {
   const { user, tokens } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  
+  // Prevent body scrolling when menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isMenuOpen]);
 
 
   useEffect(() => {
@@ -69,9 +82,9 @@ const Navbar = () => {
             <ScrollLink to="pricing" smooth={true} duration={500} offset={-80} className="text-[#1F2937] hover:text-[#F97316] px-3 py-2 text-sm font-medium cursor-pointer transition-colors duration-200" style={{ zIndex: 10, position: 'relative' }}>
               Pricing
             </ScrollLink>
-            <Link to="/contact" className="text-[#1F2937] hover:text-[#F97316] px-3 py-2 text-sm font-medium transition-colors duration-200">
+            <ScrollLink to="contact" smooth={true} duration={500} offset={-80} className="text-[#1F2937] hover:text-[#F97316] px-3 py-2 text-sm font-medium cursor-pointer transition-colors duration-200" style={{ zIndex: 10, position: 'relative' }}>
               Contact
-            </Link>
+            </ScrollLink>
 
             {tokens.access ? (
               <div className="flex items-center space-x-4">
@@ -111,26 +124,109 @@ const Navbar = () => {
       
       {/* Mobile Navigation */}
       {isMenuOpen && (
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <Link to="/" className="block text-gray-700 hover:text-indigo-600 px-3 py-2 text-base font-medium">
+        <div className="md:hidden fixed inset-0 z-40 bg-white overflow-auto">
+          <div className="flex justify-between items-center p-4 border-b border-gray-100">
+            <div className="flex items-center">
+              <img src={logo} alt="Trackifye Logo" className="h-8 w-auto" />
+            </div>
+            <button
+              onClick={toggleMenu}
+              className="text-gray-700 hover:text-indigo-600 focus:outline-none"
+            >
+              <X size={24} />
+            </button>
+          </div>
+          <div className="flex flex-col items-center text-center px-2 pt-6 pb-3 space-y-4 sm:px-3">
+            <ScrollLink 
+              to="hero" 
+              smooth={true} 
+              duration={500} 
+              offset={-80} 
+              className="block text-gray-700 hover:text-indigo-600 px-3 py-2 text-base font-medium cursor-pointer"
+              onClick={toggleMenu}
+            >
               Home
-            </Link>
-            <Link to="/features" className="block text-gray-700 hover:text-indigo-600 px-3 py-2 text-base font-medium">
+            </ScrollLink>
+            <ScrollLink 
+              to="features" 
+              smooth={true} 
+              duration={500} 
+              offset={-80} 
+              className="block text-gray-700 hover:text-indigo-600 px-3 py-2 text-base font-medium cursor-pointer"
+              onClick={toggleMenu}
+            >
               Features
-            </Link>
-            <Link to="/pricing" className="block text-gray-700 hover:text-indigo-600 px-3 py-2 text-base font-medium">
+            </ScrollLink>
+            <ScrollLink 
+              to="testimonials" 
+              smooth={true} 
+              duration={500} 
+              offset={-80} 
+              className="block text-gray-700 hover:text-indigo-600 px-3 py-2 text-base font-medium cursor-pointer"
+              onClick={toggleMenu}
+            >
+              Testimonials
+            </ScrollLink>
+            <ScrollLink 
+              to="pricing" 
+              smooth={true} 
+              duration={500} 
+              offset={-80} 
+              className="block text-gray-700 hover:text-indigo-600 px-3 py-2 text-base font-medium cursor-pointer"
+              onClick={toggleMenu}
+            >
               Pricing
-            </Link>
-            <Link to="/contact" className="block text-gray-700 hover:text-indigo-600 px-3 py-2 text-base font-medium">
+            </ScrollLink>
+            <ScrollLink 
+              to="contact" 
+              smooth={true} 
+              duration={500} 
+              offset={-80} 
+              className="block text-gray-700 hover:text-indigo-600 px-3 py-2 text-base font-medium cursor-pointer"
+              onClick={toggleMenu}
+            >
               Contact
-            </Link>
-            <Link to="/login" className="block text-indigo-600 hover:text-indigo-800 px-3 py-2 text-base font-medium">
-              Login
-            </Link>
-            <Link to="/register" className="block bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-base font-medium">
-              Register
-            </Link>
+            </ScrollLink>
+            
+            <div className="w-full border-t border-gray-200 my-2"></div>
+            
+            {tokens.access ? (
+              <div className="w-full flex flex-col items-center space-y-3 mt-2 pt-2">
+                <Link 
+                  to="/dashboard" 
+                  className="block text-indigo-600 hover:text-indigo-800 px-3 py-2 text-base font-medium w-3/4 text-center"
+                  onClick={toggleMenu}
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    toggleMenu();
+                  }}
+                  className="w-3/4 text-center block bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-base font-medium"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <div className="w-full flex flex-col items-center space-y-3 mt-2 pt-2">
+                <Link 
+                  to="/login" 
+                  className="block text-indigo-600 hover:text-indigo-800 px-3 py-2 text-base font-medium w-3/4 text-center"
+                  onClick={toggleMenu}
+                >
+                  Login
+                </Link>
+                <Link 
+                  to="/register" 
+                  className="block bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-base font-medium w-3/4 text-center"
+                  onClick={toggleMenu}
+                >
+                  Register
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -176,9 +272,9 @@ const Footer = () => {
             <h3 className="text-sm font-semibold text-[#1F2937] tracking-wider uppercase">Resources</h3>
             <ul className="mt-4 space-y-2">
               <li>
-                <Link to="/contact" className="text-sm text-[#4B5563] hover:text-[#F97316] transition-colors duration-200">
+                <ScrollLink to="contact" smooth={true} duration={500} offset={-80} className="text-sm text-[#4B5563] hover:text-[#F97316] transition-colors duration-200 cursor-pointer">
                   Support
-                </Link>
+                </ScrollLink>
               </li>
               <li>
                 <Link to="#" className="text-sm text-[#4B5563] hover:text-[#F97316] transition-colors duration-200">
