@@ -45,11 +45,11 @@ const InvoiceTemplate = ({
   };
   // Default bank details if none provided
   const defaultBankDetails = {
-    accountName: 'Your Company Account',
-    accountNumber: 'XXXX-XXXX-XXXX-XXXX',
-    bankName: 'Your Bank Name',
-    swiftCode: 'SWIFTCODE',
-    routingNumber: '123456789'
+    account_holder_name: '',
+    iban_number: '',
+    bank_name: '',
+    swift_code: '',
+    ifsc_code: ''
   };
 
 
@@ -183,7 +183,7 @@ const InvoiceTemplate = ({
           </div>
           <div className="text-right">
             {user?.profile_picture ? (
-              <div className="h-16 w-auto mb-2 rounded-md overflow-hidden flex items-center justify-end">
+              <div className="h-24 w-auto mb-2 rounded-md overflow-hidden flex items-center justify-end">
                 <img 
                   src={user.profile_picture} 
                   alt="Company Logo" 
@@ -195,9 +195,9 @@ const InvoiceTemplate = ({
                 Company Logo
               </div>
             )}
-            <p className={`font-medium ${theme.text}`}>{user?.profile?.company_name || ''}</p>
-            <p className={`${theme.textSecondary} text-sm`}>{user?.email || ''}</p>
-            <p className={`${theme.textSecondary} text-sm`}>{user?.profile?.address || ''}</p>
+            <p className={`font-medium ${theme.text}`}>{user?.profile?.company_name || invoice.user.profile.company_name}</p>
+            <p className={`${theme.textSecondary} text-sm`}>{user?.email || invoice.user.email}</p>
+            <p className={`${theme.textSecondary} text-sm`}>{user?.profile?.address || invoice.user.profile.address}</p>
           </div>
         </div>
         

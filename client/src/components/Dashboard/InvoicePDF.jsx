@@ -262,7 +262,7 @@ const InvoicePDF = ({ invoice, user, client, bankDetails }) => {
           <View style={{ alignItems: 'flex-end' }}>
             {user?.profile_picture && (
                 <Image
-                    src={`https://trackifye.up.railway.app/${user.profile_picture}`}
+                    src={user.profile_picture}
                     style={styles.logo}
                 />
                 )}
@@ -274,6 +274,9 @@ const InvoicePDF = ({ invoice, user, client, bankDetails }) => {
             
             <Text>
                 {user.first_name} {user.last_name}
+            </Text>
+            <Text>
+                {user.email}
             </Text>
             <Text>
                 {user.address}
