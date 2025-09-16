@@ -21,6 +21,7 @@ class ExpenseCategorySerializer(serializers.ModelSerializer):
 class ExpenseSerializer(serializers.ModelSerializer):
     """Serializer for the Expense model"""
     category_name = serializers.CharField(source='category.name', read_only=True)
+    receipt = serializers.ImageField(use_url=True)
     
     class Meta:
         model = Expense

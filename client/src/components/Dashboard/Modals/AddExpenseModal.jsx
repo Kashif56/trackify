@@ -106,11 +106,7 @@ const AddExpenseModal = ({ isOpen, onClose, onSave, categories = [] }) => {
     if (!formData.description.trim()) {
       newErrors.description = 'Description is required';
     }
-    
-    if (!formData.category) {
-      newErrors.category = 'Category is required';
-    }
-    
+
     if (!formData.amount) {
       newErrors.amount = 'Amount is required';
     } else if (isNaN(parseFloat(formData.amount)) || parseFloat(formData.amount) <= 0) {
@@ -144,6 +140,15 @@ const AddExpenseModal = ({ isOpen, onClose, onSave, categories = [] }) => {
     };
     
     onSave(expenseData);
+    setFormData({
+      description: '',
+      category: '',
+      amount: '',
+      date: new Date().toISOString().split('T')[0],
+      notes: '',
+      receipt: null
+    });
+    onClose();
   };
   
   if (!isOpen) return null;

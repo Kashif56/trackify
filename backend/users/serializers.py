@@ -17,6 +17,7 @@ class BankAccountSerializer(serializers.ModelSerializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     """Serializer for the UserProfile model"""
+    profile_picture = serializers.ImageField(use_url=True)
     
     class Meta:
         model = UserProfile
@@ -66,6 +67,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
 class UserProfileUpdateSerializer(serializers.ModelSerializer):
     """Serializer for updating user profile data"""
+    
     
     class Meta:
         model = UserProfile

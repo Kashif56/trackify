@@ -190,9 +190,6 @@ const EditExpenseModal = ({ isOpen, onClose, onSave, expense, categories = [] })
       newErrors.description = 'Description is required';
     }
     
-    if (!formData.category) {
-      newErrors.category = 'Category is required';
-    }
     
     if (!formData.amount) {
       newErrors.amount = 'Amount is required';
@@ -278,7 +275,7 @@ const EditExpenseModal = ({ isOpen, onClose, onSave, expense, categories = [] })
                     
                     <div>
                       <label htmlFor="edit-expense-category" className="block text-sm font-medium text-gray-700 mb-1">
-                        Category *
+                        Category
                       </label>
                       <select
                         name="category"

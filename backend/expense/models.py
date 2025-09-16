@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 import uuid
+from cloudinary.models import CloudinaryField
 
 User = get_user_model()
 
@@ -28,7 +29,7 @@ class Expense(models.Model):
     date = models.DateField()
     description = models.CharField(max_length=255)
     notes = models.TextField(blank=True)
-    receipt = models.FileField(upload_to='receipts/', blank=True, null=True)
+    receipt = CloudinaryField('receipt', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     

@@ -366,6 +366,7 @@ def get_dashboard_data(request):
     With optional date range filtering
     """
     user = request.user
+
     
     # Get date range parameters from query params
     start_date = request.query_params.get('start_date', None)

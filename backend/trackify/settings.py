@@ -195,8 +195,6 @@ CORS_ALLOW_METHODS = ['DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST', 'PUT']
 CORS_ALLOW_HEADERS = ['accept', 'accept-encoding', 'authorization', 'content-type', 'dnt', 'origin', 'user-agent', 'x-csrftoken', 'x-requested-with']
 CORS_EXPOSE_HEADERS = ['content-disposition']
 
-# Media files
-MEDIA_URL = '/media/'
 
 # Setup Static Files
 # URL to access static files
@@ -252,7 +250,7 @@ import cloudinary.api
 CLOUDINARY_STORAGE = {
     "CLOUD_NAME": os.getenv('CLOUD_NAME'),
     "API_KEY": os.getenv('CLOUDINARY_API_KEY'),
-    "API_SECRET": os.getenv('CLOUDINARY_API_SECRET'),
+    "API_SECRET": os.getenv('CLOUDINARY_SECRET_KEY'),
 }
 
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"

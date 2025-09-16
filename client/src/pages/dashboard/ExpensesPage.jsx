@@ -89,6 +89,7 @@ const ExpensesPage = () => {
         
         // Fetch expenses with filters
         const expensesData = await expenseApi.getExpenses(params);
+        console.log(expensesData);
         setExpenses(expensesData.results || expensesData);
         
         // Fetch categories

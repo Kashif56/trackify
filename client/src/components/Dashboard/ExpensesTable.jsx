@@ -186,10 +186,7 @@ const ExpensesTable = ({
                     <div className="flex justify-end space-x-3">
                       {expense.receipt && (
                         <a
-                          href={expense.receipt.includes('https://trackifye.up.railway.app') 
-                            ? expense.receipt 
-                            : `https://trackifye.up.railway.app${expense.receipt.startsWith('/') ? '' : '/'}${expense.receipt}`
-                          }
+                          href={expense.receipt}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-50 transition-colors duration-200 inline-flex items-center justify-center"

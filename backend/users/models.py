@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 from datetime import timedelta
 from subscription.models import Plan, Subscription
+from cloudinary.models import CloudinaryField
 
 
 CURRENCY_CHOICES = (
@@ -24,7 +25,7 @@ class UserProfile(models.Model):
     state = models.CharField(null=True, blank=True, max_length=100)
     country = models.CharField(null=True, blank=True, max_length=100)
     zip_code = models.CharField(null=True, blank=True, max_length=20)
-    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
+    profile_picture = CloudinaryField('profile_picture', blank=True, null=True)
     is_email_verified = models.BooleanField(default=False)
 
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='pkr')
@@ -80,9 +81,9 @@ class BankAccount(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='bank_account')
     bank_name = models.CharField(max_length=255)
     iban_number = models.CharField(max_length=255)
-    ifsc_code = models.CharField(max_length=255)
-    account_holder_name = models.CharField(max_length=255)
-    swift_code = models.CharField(max_length=255)
+    ifsc_code = models.CharField(max_length=255, blank=True, null=True)
+    account_holder_name = models.CharField(max_length=255, blank=True, null=True)
+    swift_code = models.CharField(max_length=255, blank=True, null=True)
     
     def __str__(self):
         return self.user.email
