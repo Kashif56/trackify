@@ -74,7 +74,7 @@ const HeroSection = () => {
               transition={{ duration: 0.8, delay: 0.6 }}
             >
               <Link to="/register" className="rounded-md bg-[#F97316] px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-[#EA580C] hover:scale-105 transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F97316]">
-                Get Started Free
+                Create your First Invoice
               </Link>
               <Link to="/features" className="text-lg font-semibold leading-6 text-[#1F2937] flex items-center group transition-all duration-300">
                 Learn more <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
@@ -109,7 +109,7 @@ const HeroSection = () => {
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
               >
-                <span className="text-3xl font-bold text-[#22C55E]">3,000+</span>
+                <span className="text-3xl font-bold text-[#22C55E]">100+</span>
                 <span className="text-sm text-[#4B5563]">Freelancers</span>
               </motion.div>
               <motion.div 
@@ -117,7 +117,7 @@ const HeroSection = () => {
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
               >
-                <span className="text-3xl font-bold text-[#22C55E]">50,000+</span>
+                <span className="text-3xl font-bold text-[#22C55E]">700+</span>
                 <span className="text-sm text-[#4B5563]">Invoices Created</span>
               </motion.div>
               <motion.div 
