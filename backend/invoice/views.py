@@ -4,6 +4,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
+from datetime import datetime
+from django.utils import timezone
 
 from .models import Invoice
 from .serializers import InvoiceSerializer, InvoiceDetailSerializer
@@ -44,7 +46,7 @@ class InvoiceView(APIView):
         return [IsAuthenticated()]
             
     def get(self, request, invoice_id=None):
-        """Get a list of invoices or a specific invoice"""
+        """Get a list of invoices or a specific invoice with optional date range filtering"""
         if invoice_id:
             # Get specific invoice with detailed information
             try:
@@ -59,7 +61,44 @@ class InvoiceView(APIView):
             if not request.user.is_authenticated:
                 return Response({'error': 'Authentication required to list invoices'}, 
                                status=status.HTTP_401_UNAUTHORIZED)
+            
+            # Get date range parameters from query params
+            start_date = request.query_params.get('start_date', None)
+            end_date = request.query_params.get('end_date', None)
+            range_type = request.query_params.get('range_type', None)
+            
+            # Base queryset filtered by user
             queryset = Invoice.objects.filter(user=request.user)
+            
+            # Apply date range filtering if provided
+            if start_date and end_date:
+                try:
+                    # Convert string dates to datetime objects
+                    start_date = timezone.make_aware(datetime.strptime(start_date, '%Y-%m-%d'))
+                    # Set end_date to end of the day
+                    end_date = timezone.make_aware(datetime.strptime(end_date, '%Y-%m-%d'))
+                    end_date = end_date.replace(hour=23, minute=59, second=59)
+                    
+                    # Filter by date range
+                    queryset = queryset.filter(created_at__gte=start_date, created_at__lte=end_date)
+                except ValueError:
+                    # If date parsing fails, ignore date filtering
+                    pass
+            # Apply status filter if provided
+            status_filter = request.query_params.get('status', None)
+            if status_filter and status_filter != 'all':
+                queryset = queryset.filter(status=status_filter)
+                
+            # Apply search filter if provided
+            search_term = request.query_params.get('search', None)
+            if search_term:
+                queryset = queryset.filter(
+                    invoice_number__icontains=search_term
+                ) | queryset.filter(
+                    client__name__icontains=search_term
+                )
+                
+            # Return paginated response
             return self.get_paginated_response(queryset, InvoiceSerializer)
     
     def post(self, request):

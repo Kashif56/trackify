@@ -319,7 +319,7 @@ const ProfilePage = () => {
                       />
                     ) : profileData?.profile?.profile_picture ? (
                       <img
-                        src={`https://trackifye.up.railway.app/${profileData?.profile?.profile_picture}`}
+                        src={profileData?.profile?.profile_picture}
                         alt="Profile"
                         className="w-full h-full object-cover"
                       />

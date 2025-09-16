@@ -53,23 +53,22 @@ const InvoiceTemplate = ({
   };
 
 
-  console.log("user: ", reduxUser)
 
   const reduxUserBankAccount = {
-    account_holder_name: reduxUser.bank_account.account_holder_name,
-    iban_number: reduxUser.bank_account.iban_number,
-    bank_name: reduxUser.bank_account.bank_name,
-    swift_code: reduxUser.bank_account.swift_code,
-    ifsc_code: reduxUser.bank_account.ifsc_code
+    account_holder_name: reduxUser.bank_account.account_holder_name || '',
+    iban_number: reduxUser.bank_account.iban_number || '',
+    bank_name: reduxUser.bank_account.bank_name || '',
+    swift_code: reduxUser.bank_account.swift_code || '',
+    ifsc_code: reduxUser.bank_account.ifsc_code || ''
   }
 
   // Use bank account from user profile if available, otherwise use provided bank details or defaults
   const displayBankDetails = user?.bank_account ? {
-    account_holder_name: user.bank_account.account_holder_name,
-    iban_number: user.bank_account.iban_number,
-    bank_name: user.bank_account.bank_name,
-    swift_code: user.bank_account.swift_code,
-    ifsc_code: user.bank_account.ifsc_code
+    account_holder_name: user.bank_account.account_holder_name || '',
+    iban_number: user.bank_account.iban_number || '',
+    bank_name: user.bank_account.bank_name || '',
+    swift_code: user.bank_account.swift_code || '',
+    ifsc_code: user.bank_account.ifsc_code || ''
   } : reduxUserBankAccount;
 
   // Theme variables based on dark/light mode
@@ -186,7 +185,7 @@ const InvoiceTemplate = ({
             {user?.profile_picture ? (
               <div className="h-16 w-auto mb-2 rounded-md overflow-hidden flex items-center justify-end">
                 <img 
-                  src={`${user.profile_picture.startsWith('http') ? '' : 'https://trackifye.up.railway.app/'}${user.profile_picture}`} 
+                  src={user.profile_picture} 
                   alt="Company Logo" 
                   className="h-full w-auto object-contain"
                 />
@@ -196,9 +195,9 @@ const InvoiceTemplate = ({
                 Company Logo
               </div>
             )}
-            <p className={`font-medium ${theme.text}`}>{user?.company_name || 'Your Company Name'}</p>
-            <p className={`${theme.textSecondary} text-sm`}>{user?.email || 'your.email@example.com'}</p>
-            <p className={`${theme.textSecondary} text-sm`}>{user?.address || 'Your Address'}</p>
+            <p className={`font-medium ${theme.text}`}>{user?.profile?.company_name || ''}</p>
+            <p className={`${theme.textSecondary} text-sm`}>{user?.email || ''}</p>
+            <p className={`${theme.textSecondary} text-sm`}>{user?.profile?.address || ''}</p>
           </div>
         </div>
         
@@ -206,9 +205,9 @@ const InvoiceTemplate = ({
         <div className="grid grid-cols-2 md:grid-cols-2 gap-8 mb-10">
           <div>
             <h2 className={`text-sm font-medium ${localDarkMode ? 'text-gray-400' : 'text-gray-500'} uppercase mb-3`}>Bill To:</h2>
-            <p className={`font-medium ${theme.text}`}>{client?.name || 'Client Name'}</p>
-            <p className={theme.textSecondary}>{client?.email || 'client@example.com'}</p>
-            <p className={`${theme.textSecondary} whitespace-pre-line`}>{client?.address || 'Client Address'}</p>
+            <p className={`font-medium ${theme.text}`}>{client?.name || ''}</p>
+            <p className={theme.textSecondary}>{client?.email || ''}</p>
+            <p className={`${theme.textSecondary} whitespace-pre-line`}>{client?.address || ''}</p>
             {client?.company_name && <p className={`${theme.textSecondary} font-medium mt-1`}>{client.company_name}</p>}
             {client?.phone_number && <p className={theme.textSecondary}>{client.phone_number}</p>}
           </div>
@@ -296,19 +295,19 @@ const InvoiceTemplate = ({
               <h2 className={`text-sm font-medium ${localDarkMode ? 'text-gray-300' : 'text-gray-700'} mb-3`}>Bank Account Details:</h2>
               <div className="space-y-2">
                 <p className={`text-sm ${theme.textSecondary}`}>
-                  <span className="font-medium">Account Name:</span> {displayBankDetails.account_holder_name}
+                  <span className="font-medium">Account Name:</span> {displayBankDetails?.account_holder_name}
                 </p>
                 <p className={`text-sm ${theme.textSecondary}`}>
-                  <span className="font-medium">Account Number:</span> {displayBankDetails.iban_number}
+                  <span className="font-medium">Account Number:</span> {displayBankDetails?.iban_number}
                 </p>
                 <p className={`text-sm ${theme.textSecondary}`}>
-                  <span className="font-medium">Bank Name:</span> {displayBankDetails.bank_name}
+                  <span className="font-medium">Bank Name:</span> {displayBankDetails?.bank_name}
                 </p>
                 <p className={`text-sm ${theme.textSecondary}`}>
-                  <span className="font-medium">SWIFT:</span> {displayBankDetails.swift_code}
+                  <span className="font-medium">SWIFT:</span> {displayBankDetails?.swift_code}
                 </p>
                 <p className={`text-sm ${theme.textSecondary}`}>
-                  <span className="font-medium">IFSC Code:</span> {displayBankDetails.ifsc_code}
+                  <span className="font-medium">IFSC Code:</span> {displayBankDetails?.ifsc_code}
                 </p>
               </div>
             </div>

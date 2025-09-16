@@ -68,15 +68,7 @@ const AnalyticsPage = () => {
         {/* Income & Expenses Tab */}
         {activeTab === 'income-expenses' && (
           <div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <GrowthRate />
-              <div className="bg-white rounded-lg shadow p-4">
-                <h2 className="text-xl font-semibold text-gray-800 mb-4">Income & Expenses Summary</h2>
-                <p className="text-gray-600">
-                  Track your income and expenses over time to better understand your business's financial health.
-                </p>
-              </div>
-            </div>
+           
             <IncomeExpensesChart />
             <TopExpenseCategories />
           </div>
@@ -87,12 +79,7 @@ const AnalyticsPage = () => {
           <div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <InvoiceStatusBreakdown />
-              <div className="bg-white rounded-lg shadow p-4">
-                <h2 className="text-xl font-semibold text-gray-800 mb-4">Invoice Analytics</h2>
-                <p className="text-gray-600">
-                  Analyze your invoices by status, amount, and client to identify patterns and opportunities.
-                </p>
-              </div>
+             
             </div>
             <UpcomingPayments />
           </div>
@@ -101,12 +88,7 @@ const AnalyticsPage = () => {
         {/* Upcoming Payments Tab */}
         {activeTab === 'upcoming' && (
           <div>
-            <div className="bg-white rounded-lg shadow p-4 mb-6">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">Payment Schedule</h2>
-              <p className="text-gray-600">
-                Keep track of upcoming payments to manage your cash flow effectively.
-              </p>
-            </div>
+          
             <UpcomingPayments />
           </div>
         )}

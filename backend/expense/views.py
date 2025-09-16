@@ -4,6 +4,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
+from datetime import datetime
+from django.utils import timezone
+from django.db.models import Sum
 
 from .models import Expense, ExpenseCategory
 from .serializers import ExpenseSerializer, ExpenseDetailSerializer, ExpenseCategorySerializer
@@ -36,19 +39,45 @@ class ExpenseView(APIView):
         return paginator.get_paginated_response(serializer.data)
     
     def get(self, request, expense_id=None):
-        """Get a list of expenses or a specific expense"""
+        """Get a list of expenses or a specific expense with optional date range filtering"""
         if expense_id:
             # Get specific expense
             try:
                 expense = get_object_or_404(Expense, id=expense_id, user=request.user)
                 serializer = ExpenseDetailSerializer(expense)
-                print(serializer.data)
                 return Response(serializer.data)
             except Exception as e:
                 return Response({'error': str(e)}, status=status.HTTP_404_NOT_FOUND)
         else:
-            # List all expenses with pagination
+            # Get date range parameters from query params
+            start_date = request.query_params.get('start_date', None)
+            end_date = request.query_params.get('end_date', None)
+            range_type = request.query_params.get('range_type', None)
+            
+            # Base queryset filtered by user
             queryset = Expense.objects.filter(user=request.user)
+            
+            # Apply date range filtering if provided
+            if start_date and end_date:
+                try:
+                    # Convert string dates to datetime objects
+                    start_date = timezone.make_aware(datetime.strptime(start_date, '%Y-%m-%d'))
+                    # Set end_date to end of the day
+                    end_date = timezone.make_aware(datetime.strptime(end_date, '%Y-%m-%d'))
+                    end_date = end_date.replace(hour=23, minute=59, second=59)
+                    
+                    # Filter by date range
+                    queryset = queryset.filter(created_at__gte=start_date, created_at__lte=end_date)
+                except ValueError:
+                    # If date parsing fails, ignore date filtering
+                    pass
+            
+            # Apply category filter if provided
+            category_filter = request.query_params.get('category', None)
+            if category_filter:
+                queryset = queryset.filter(category__name=category_filter)
+                
+            # Return paginated response
             return self.get_paginated_response(queryset, ExpenseSerializer)
     
     def post(self, request):

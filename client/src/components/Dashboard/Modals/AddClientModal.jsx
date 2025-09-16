@@ -48,11 +48,7 @@ const AddClientModal = ({ isOpen, onClose, onClientAdded }) => {
       toast.error("Client name is required");
       return;
     }
-    
-    if (!formData.email) {
-      toast.error("Client email is required");
-      return;
-    }
+ 
     
     try {
       setSubmitting(true);
@@ -146,7 +142,7 @@ const AddClientModal = ({ isOpen, onClose, onClientAdded }) => {
                   {/* Email */}
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                      Email *
+                      Email
                     </label>
                     <div className="mt-1 relative rounded-md shadow-sm">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -160,7 +156,6 @@ const AddClientModal = ({ isOpen, onClose, onClientAdded }) => {
                         onChange={handleInputChange}
                         className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F97316] focus:border-transparent"
                         placeholder="email@example.com"
-                        required
                       />
                     </div>
                   </div>

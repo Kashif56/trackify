@@ -9,6 +9,8 @@ import DashboardLayout from '../../layout/DashboardLayout';
 import StatCard from '../../components/Dashboard/StatCard';
 import ExpensesTable from '../../components/Dashboard/ExpensesTable';
 import InvoicesTable from '../../components/Dashboard/InvoicesTable';
+import DateRangeSelector from '../../components/DateRange/DateRangeSelector';
+import Button from '../../components/ui/Button';
 
 // Fallback data in case API fails
 const fallbackData = {
@@ -33,48 +35,62 @@ const Dashboard = () => {
   });
   const [recentInvoices, setRecentInvoices] = useState([]);
   const [recentExpenses, setRecentExpenses] = useState([]);
+  const [dateRange, setDateRange] = useState({
+    start_date: '',
+    end_date: '',
+    range_type: 'last_30_days'
+  });
   
   const { user, tokens } = useSelector(state => state.user);
   const dispatch = useDispatch();
 
-  // Fetch dashboard data
-  useEffect(() => {
-    async function fetchDashboardData() {
-      try {
-        const data = await dashboardApi.getDashboardData();
-        
-        setStats({
-          totalIncome: data.stats.total_income,
-          totalExpenses: data.stats.total_expenses,
-          balance: data.stats.balance,
-          incomeTrend: data.stats.income_trend,
-          expenseTrend: data.stats.expense_trend,
-          balanceTrend: data.stats.balance_trend
-        });
-        
-        setRecentInvoices(data.recent_invoices);
-        setRecentExpenses(data.recent_expenses);
-      } catch (error) {
-        console.error('Error fetching dashboard data:', error);
-        toast.error('Failed to load dashboard data');
-        
-        // Use fallback data if API fails
-        setStats({
-          totalIncome: fallbackData.stats.total_income,
-          totalExpenses: fallbackData.stats.total_expenses,
-          balance: fallbackData.stats.balance,
-          incomeTrend: fallbackData.stats.income_trend,
-          expenseTrend: fallbackData.stats.expense_trend,
-          balanceTrend: fallbackData.stats.balance_trend
-        });
-        
-        setRecentInvoices(fallbackData.recent_invoices);
-        setRecentExpenses(fallbackData.recent_expenses);
-      } finally {
-        setLoading(false);
-      }
+  // Fetch dashboard data with date range
+  const fetchDashboardData = async (dateRangeParams = null) => {
+    setLoading(true);
+    try {
+      const data = await dashboardApi.getDashboardData(dateRangeParams);
+      
+      setStats({
+        totalIncome: data.stats.total_income,
+        totalExpenses: data.stats.total_expenses,
+        balance: data.stats.balance,
+        incomeTrend: data.stats.income_trend,
+        expenseTrend: data.stats.expense_trend,
+        balanceTrend: data.stats.balance_trend,
+        dateRange: data.stats.date_range || dateRange
+      });
+      
+      setRecentInvoices(data.recent_invoices);
+      setRecentExpenses(data.recent_expenses);
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+      toast.error('Failed to load dashboard data');
+      
+      // Use fallback data if API fails
+      setStats({
+        totalIncome: fallbackData.stats.total_income,
+        totalExpenses: fallbackData.stats.total_expenses,
+        balance: fallbackData.stats.balance,
+        incomeTrend: fallbackData.stats.income_trend,
+        expenseTrend: fallbackData.stats.expense_trend,
+        balanceTrend: fallbackData.stats.balance_trend
+      });
+      
+      setRecentInvoices(fallbackData.recent_invoices);
+      setRecentExpenses(fallbackData.recent_expenses);
+    } finally {
+      setLoading(false);
     }
-    
+  };
+  
+  // Handle date range change
+  const handleDateRangeChange = (newDateRange) => {
+    setDateRange(newDateRange);
+    fetchDashboardData(newDateRange);
+  };
+
+  // Initial data fetch
+  useEffect(() => {
     fetchDashboardData();
   }, []);
 
@@ -121,11 +137,9 @@ const Dashboard = () => {
         {/* Page Header */}
         <div className="sm:flex sm:items-center sm:justify-between">
           <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
-          <div className="mt-3 sm:mt-0">
-            <button className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#F97316] hover:bg-[#EA580C] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F97316]">
-              <CreditCard className="mr-2 h-4 w-4" />
-              New Invoice
-            </button>
+          <div className="flex items-center gap-4 mt-3 sm:mt-0">
+            <DateRangeSelector onDateRangeChange={handleDateRangeChange} />
+           
           </div>
         </div>
         

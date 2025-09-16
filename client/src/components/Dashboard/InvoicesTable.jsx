@@ -113,7 +113,7 @@ const InvoicesTable = ({
                     {invoice.invoice_number}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                    {invoice.client?.name || 'Unknown Client'}
+                    {invoice.client_name || 'Unknown Client'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-gray-600">
                     {new Date(invoice.due_date).toLocaleDateString()}

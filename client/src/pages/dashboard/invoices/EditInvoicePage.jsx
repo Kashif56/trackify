@@ -75,12 +75,9 @@ const EditInvoicePage = () => {
         setInvoice(data);
         setInvoiceData(data); // Store the complete invoice data
         
-        // Set form data from fetched invoice
-        // Ensure client ID is stored as string for consistent comparison
-        const clientId = String(data.client);
+      
         
         setFormData({
-          client_id: clientId,
           issue_date: data.issue_date,
           due_date: data.due_date,
           invoice_number: data.invoice_number,
@@ -218,7 +215,6 @@ const EditInvoicePage = () => {
     
     // Prepare data for submission
     const invoiceData = {
-      client: formData.client_id,
       issue_date: formData.issue_date,
       due_date: formData.due_date,
       notes: formData.notes,
@@ -311,77 +307,12 @@ const EditInvoicePage = () => {
         {/* Left Side - Form */}
         <div className="w-full lg:w-1/2">
           <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden">
-            {/* Client Information */}
-            <div className="p-6 border-b border-gray-100">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">Client Information</h2>
-              <div className="mb-4">
-                <label htmlFor="client_id" className="block text-sm font-medium text-gray-700 mb-1">
-                  Select Client
-                </label>
-                {clientsLoading ? (
-                  <div className="flex items-center space-x-2 border border-gray-300 rounded-md px-3 py-2 bg-gray-50">
-                    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-[#F97316]"></div>
-                    <span className="text-gray-500">Loading clients...</span>
-                  </div>
-                ) : (
-                  <select
-                    id="client_id"
-                    name="client_id"
-                    value={formData.client_id || ''}
-                    onChange={handleInputChange}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#F97316] focus:border-transparent"
-                  >
-                    <option value="">-- Select a client --</option>
-                    {clients.map(client => {
-                      // Always compare as strings to avoid type mismatches
-                      const isSelected = String(client.id) === String(formData.client_id);
-                      return (
-                        <option key={client.id} value={String(client.id)}>
-                          {client.name} {isSelected ? '(Selected)' : ''}
-                        </option>
-                      );
-                    })}
-                    {/* Add the invoice's client as an option if it's not in the clients list */}
-                    {invoiceData?.client && invoiceData?.client_details && !clients.some(c => String(c.id) === String(invoiceData.client)) && (
-                      <option key={invoiceData.client} value={String(invoiceData.client)}>
-                        {invoiceData.client_details.name} (Current)
-                      </option>
-                    )}
-                  </select>
-                )}
-              </div>
-              
-              {selectedClient && (
-                <div className="bg-gray-50 p-4 rounded-md">
-                  <p className="font-medium text-gray-800">{selectedClient.name}</p>
-                  <p className="text-gray-600 text-sm">{selectedClient.email}</p>
-                  <p className="text-gray-600 text-sm whitespace-pre-line">{selectedClient.address}</p>
-                </div>
-              )}
-            </div>
-            
+   
             {/* Invoice Details */}
             <div className="p-6 border-b border-gray-100">
               <h2 className="text-xl font-semibold text-gray-800 mb-4">Invoice Details</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="invoice_number" className="block text-sm font-medium text-gray-700 mb-1">
-                    Invoice Number
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Hash className="h-5 w-5 text-gray-400" />
-                    </div>
-                    <input
-                      type="text"
-                      id="invoice_number"
-                      name="invoice_number"
-                      value={formData.invoice_number}
-                      onChange={handleInputChange}
-                      className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F97316] focus:border-transparent"
-                    />
-                  </div>
-                </div>
+               
                 <div>
                   <label htmlFor="issue_date" className="block text-sm font-medium text-gray-700 mb-1">
                     Issue Date

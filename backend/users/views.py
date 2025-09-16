@@ -20,7 +20,7 @@ from expense.models import Expense
 from expense.serializers import ExpenseSerializer
 from django.db.models import Sum
 from django.utils import timezone
-from datetime import timedelta
+from datetime import timedelta, datetime
 from trackify.utils import send_email
 
 
@@ -363,77 +363,123 @@ The Trackify Team
 def get_dashboard_data(request):
     """
     Get dashboard data including stats and recent invoices/expenses
+    With optional date range filtering
     """
     user = request.user
     
-    # Calculate total income from paid invoices
+    # Get date range parameters from query params
+    start_date = request.query_params.get('start_date', None)
+    end_date = request.query_params.get('end_date', None)
+    range_type = request.query_params.get('range_type', 'last_30_days')
+    
+    # Set default date filters based on range_type if not explicitly provided
+    if not start_date or not end_date:
+        today = timezone.now()
+        
+        if range_type == 'last_30_days':
+            end_date = today
+            start_date = today - timedelta(days=30)
+        elif range_type == 'last_month':
+            last_month = today.replace(day=1) - timedelta(days=1)
+            start_date = last_month.replace(day=1)
+            end_date = last_month.replace(day=last_month.day)
+        elif range_type == 'last_3_months':
+            end_date = today
+            start_date = today - timedelta(days=90)
+        elif range_type == 'last_6_months':
+            end_date = today
+            start_date = today - timedelta(days=180)
+        elif range_type == 'last_year':
+            last_year = today.replace(year=today.year-1)
+            start_date = last_year.replace(month=1, day=1)
+            end_date = last_year.replace(month=12, day=31)
+        else:  # Default to last 30 days
+            end_date = today
+            start_date = today - timedelta(days=30)
+    else:
+        # Convert string dates to datetime objects
+        try:
+            start_date = timezone.make_aware(datetime.strptime(start_date, '%Y-%m-%d'))
+            # Set end_date to end of the day
+            end_date = timezone.make_aware(datetime.strptime(end_date, '%Y-%m-%d'))
+            end_date = end_date.replace(hour=23, minute=59, second=59)
+        except ValueError:
+            # If date parsing fails, default to last 30 days
+            today = timezone.now()
+            end_date = today
+            start_date = today - timedelta(days=30)
+    
+    # Calculate total income from paid invoices within date range
     total_income = Invoice.objects.filter(
         user=user,
-        status='paid'
+        status='paid',
+        created_at__gte=start_date,
+        created_at__lte=end_date
     ).aggregate(total=Sum('total'))['total'] or 0
     
-    # Calculate total expenses
+    # Calculate total expenses within date range
     total_expenses = Expense.objects.filter(
-        user=user
+        user=user,
+        created_at__gte=start_date,
+        created_at__lte=end_date
     ).aggregate(total=Sum('amount'))['total'] or 0
     
     # Calculate balance
     balance = total_income - total_expenses
     
-    # Get recent invoices (last 5)
-    recent_invoices = Invoice.objects.filter(user=user).order_by('-created_at')[:5]
+    # Get recent invoices (last 5) within date range
+    recent_invoices = Invoice.objects.filter(
+        user=user,
+        created_at__gte=start_date,
+        created_at__lte=end_date
+    ).order_by('-created_at')[:5]
     invoice_serializer = InvoiceSerializer(recent_invoices, many=True)
     
-    # Get recent expenses (last 5)
-    recent_expenses = Expense.objects.filter(user=user).order_by('-created_at')[:5]
+    # Get recent expenses (last 5) within date range
+    recent_expenses = Expense.objects.filter(
+        user=user,
+        created_at__gte=start_date,
+        created_at__lte=end_date
+    ).order_by('-created_at')[:5]
     expense_serializer = ExpenseSerializer(recent_expenses, many=True)
     
-    # Get month-over-month comparison for income
-    current_month_start = timezone.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-    last_month_start = (current_month_start - timedelta(days=1)).replace(day=1)
+    # Calculate trends based on previous period of equal length
+    period_length = (end_date - start_date).days
+    previous_start = start_date - timedelta(days=period_length)
+    previous_end = start_date - timedelta(days=1)
     
-    current_month_income = Invoice.objects.filter(
+    # Get previous period income
+    previous_income = Invoice.objects.filter(
         user=user,
         status='paid',
-        created_at__gte=current_month_start
+        created_at__gte=previous_start,
+        created_at__lte=previous_end
     ).aggregate(total=Sum('total'))['total'] or 0
     
-    last_month_income = Invoice.objects.filter(
+    # Get previous period expenses
+    previous_expenses = Expense.objects.filter(
         user=user,
-        status='paid',
-        created_at__gte=last_month_start,
-        created_at__lt=current_month_start
-    ).aggregate(total=Sum('total'))['total'] or 0
+        created_at__gte=previous_start,
+        created_at__lte=previous_end
+    ).aggregate(total=Sum('amount'))['total'] or 0
     
     # Calculate income trend percentage
     income_trend = 0
-    if last_month_income > 0:
-        income_trend = ((current_month_income - last_month_income) / last_month_income) * 100
-    
-    # Get month-over-month comparison for expenses
-    current_month_expenses = Expense.objects.filter(
-        user=user,
-        created_at__gte=current_month_start
-    ).aggregate(total=Sum('amount'))['total'] or 0
-    
-    last_month_expenses = Expense.objects.filter(
-        user=user,
-        created_at__gte=last_month_start,
-        created_at__lt=current_month_start
-    ).aggregate(total=Sum('amount'))['total'] or 0
+    if previous_income > 0:
+        income_trend = ((total_income - previous_income) / previous_income) * 100
     
     # Calculate expense trend percentage
     expense_trend = 0
-    if last_month_expenses > 0:
-        expense_trend = ((current_month_expenses - last_month_expenses) / last_month_expenses) * 100
+    if previous_expenses > 0:
+        expense_trend = ((total_expenses - previous_expenses) / previous_expenses) * 100
     
     # Calculate balance trend
     balance_trend = 0
-    last_month_balance = last_month_income - last_month_expenses
-    current_month_balance = current_month_income - current_month_expenses
+    previous_balance = previous_income - previous_expenses
+    current_balance = total_income - total_expenses
     
-    if last_month_balance != 0:
-        balance_trend = ((current_month_balance - last_month_balance) / abs(last_month_balance)) * 100
+    if previous_balance != 0:
+        balance_trend = ((current_balance - previous_balance) / abs(previous_balance)) * 100
     
     return Response({
         'stats': {
@@ -442,7 +488,12 @@ def get_dashboard_data(request):
             'balance': balance,
             'income_trend': round(income_trend, 2),
             'expense_trend': round(expense_trend, 2),
-            'balance_trend': round(balance_trend, 2)
+            'balance_trend': round(balance_trend, 2),
+            'date_range': {
+                'start_date': start_date.strftime('%Y-%m-%d'),
+                'end_date': end_date.strftime('%Y-%m-%d'),
+                'range_type': range_type
+            }
         },
         'recent_invoices': invoice_serializer.data,
         'recent_expenses': expense_serializer.data

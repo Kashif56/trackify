@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Plus, Filter, Tag } from 'lucide-react';
+import { Plus, Filter, Tag, DollarSign, CreditCard, TrendingUp, Calendar } from 'lucide-react';
 import { toast } from 'react-toastify';
 import expenseApi from '../../api/expenseApi';
+import DateRangeSelector from '../../components/DateRange/DateRangeSelector';
 
 // Layout and Components
 import DashboardLayout from '../../layout/DashboardLayout';
 import ExpensesTable from '../../components/Dashboard/ExpensesTable';
+import StatCard from '../../components/Dashboard/StatCard';
 import AddExpenseModal from '../../components/Dashboard/Modals/AddExpenseModal';
 import EditExpenseModal from '../../components/Dashboard/Modals/EditExpenseModal';
 import DeleteExpenseModal from '../../components/Dashboard/Modals/DeleteExpenseModal';
@@ -31,6 +33,36 @@ const ExpensesPage = () => {
   const [selectedExpense, setSelectedExpense] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [filterCategory, setFilterCategory] = useState('');
+  const [dateRange, setDateRange] = useState({
+    start_date: '',
+    end_date: '',
+    range_type: 'last_30_days'
+  });
+  
+  // Stats calculations
+  const totalExpensesAmount = expenses.reduce((sum, expense) => sum + parseFloat(expense.amount || 0), 0);
+  
+  // Group expenses by category
+  const expensesByCategory = expenses.reduce((acc, expense) => {
+    if (expense.category && expense.category.name) {
+      const categoryName = expense.category.name;
+      if (!acc[categoryName]) {
+        acc[categoryName] = 0;
+      }
+      acc[categoryName] += parseFloat(expense.amount || 0);
+    } else {
+      if (!acc['Uncategorized']) {
+        acc['Uncategorized'] = 0;
+      }
+      acc['Uncategorized'] += parseFloat(expense.amount || 0);
+    }
+    return acc;
+  }, {});
+  
+  // Find top 3 expense categories
+  const topCategories = Object.entries(expensesByCategory)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3);
   
   const dispatch = useDispatch();
   const { user, tokens } = useSelector(state => state.user);
@@ -40,15 +72,29 @@ const ExpensesPage = () => {
     async function fetchData() {
       setLoading(true);
       try {
-        // Fetch expenses
-        const expensesData = await expenseApi.getExpenses();
+        // Prepare params for API call
+        const params = {};
+        
+        // Add date range parameters if they exist
+        if (dateRange.start_date && dateRange.end_date) {
+          params.start_date = dateRange.start_date;
+          params.end_date = dateRange.end_date;
+          params.range_type = dateRange.range_type;
+        }
+        
+        // Add category filter if it exists
+        if (filterCategory) {
+          params.category = filterCategory;
+        }
+        
+        // Fetch expenses with filters
+        const expensesData = await expenseApi.getExpenses(params);
         setExpenses(expensesData.results || expensesData);
         
         // Fetch categories
         const categoriesData = await expenseApi.getCategories();
         // Ensure categories is always an array
         setCategories(Array.isArray(categoriesData.results) ? categoriesData.results : []);
-        console.log(categoriesData.results)
       } catch (error) {
         console.error('Error fetching expenses data:', error);
         toast.error('Failed to load expenses data');
@@ -58,7 +104,7 @@ const ExpensesPage = () => {
     }
     
     fetchData();
-  }, []);
+  }, [filterCategory, dateRange]);  // Re-fetch when filters or date range change
 
   // Handle adding a new expense
   const handleAddExpense = async (expenseData) => {
@@ -169,6 +215,12 @@ const ExpensesPage = () => {
     setSelectedCategory(category);
     setShowDeleteCategoryModal(true);
   };
+  
+  // Handle date range change from DateRangeSelector
+  const handleDateRangeChange = (newDateRange) => {
+    setDateRange(newDateRange);
+    // The useEffect will automatically trigger a re-fetch
+  };
 
   // Filter expenses by category
   const filteredExpenses = filterCategory 
@@ -182,9 +234,10 @@ const ExpensesPage = () => {
         <div className="sm:flex sm:items-center sm:justify-between">
           <h1 className="text-2xl font-semibold text-gray-900">Expenses</h1>
           <div className="mt-3 sm:mt-0 sm:flex sm:space-x-3">
+            <DateRangeSelector onDateRangeChange={handleDateRangeChange} />
             <div className="relative">
               <select
-                className="bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+                className="bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary appearance-none"
                 value={filterCategory}
                 onChange={(e) => setFilterCategory(e.target.value)}
               >
@@ -216,6 +269,19 @@ const ExpensesPage = () => {
               </button>
             </div>
           </div>
+        </div>
+        
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <StatCard 
+            title="Total Expenses" 
+            value={`${totalExpensesAmount.toFixed(2)}`} 
+            icon={<DollarSign className="w-6 h-6 text-red-500" />} 
+            subtitle={`${expenses.length} expenses`}
+            bgColor="bg-red-50"
+            textColor="text-red-800"
+          />
+          
         </div>
         
         {/* Expenses Table */}

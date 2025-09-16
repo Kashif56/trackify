@@ -193,7 +193,7 @@ const AddExpenseModal = ({ isOpen, onClose, onSave, categories = [] }) => {
                     
                     <div>
                       <label htmlFor="expense-category" className="block text-sm font-medium text-gray-700 mb-1">
-                        Category *
+                        Category
                       </label>
                       <select
                         name="category"

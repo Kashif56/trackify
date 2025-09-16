@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../redux/slices/userSlice';
+import { logout, updateUserPreferences } from '../redux/slices/userSlice';
 import { toast } from 'react-toastify';
 import { 
   Menu, X, ChevronDown, Sun, Moon, 
@@ -95,9 +95,7 @@ const Navbar = ({ toggleSidebar, isSidebarCollapsed }) => {
                       {user?.profile?.currency === 'pkr' ? 'PKR (Rs)' : 'USD ($)'}
                     </span>
                   </div>
-                  <Link to="/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                    Settings
-                  </Link>
+                 
                   <button
                     onClick={handleLogout}
                     className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -160,10 +158,16 @@ const Sidebar = ({ isCollapsed }) => {
 };
 
 const DashboardLayout = ({ children }) => {
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const dispatch = useDispatch();
+  const { user_preferences } = useSelector((state) => state.user);
   
+  // Get sidebar state from Redux or default to false (expanded)
+  const isSidebarCollapsed = user_preferences?.sidebarCollapsed || false;
+  
+  // Update sidebar state in Redux
   const toggleSidebar = () => {
-    setIsSidebarCollapsed(!isSidebarCollapsed);
+    const newState = !isSidebarCollapsed;
+    dispatch(updateUserPreferences({ sidebarCollapsed: newState }));
   };
 
   return (

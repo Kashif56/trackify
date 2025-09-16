@@ -185,7 +185,7 @@ const AddInvoicePage = () => {
       setSubmitting(true);
       const response = await invoiceService.createInvoice(invoiceData);
       toast.success("Invoice created successfully!");
-      navigate('/invoices');
+      navigate(`/invoices/${response.id}`);
     } catch (err) {
       toast.error(err.message || "Failed to create invoice");
     } finally {
@@ -284,24 +284,7 @@ const AddInvoicePage = () => {
             <div className="p-6 border-b border-gray-100">
               <h2 className="text-xl font-semibold text-gray-800 mb-4">Invoice Details</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="invoice_number" className="block text-sm font-medium text-gray-700 mb-1">
-                    Invoice Number
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Hash className="h-5 w-5 text-gray-400" />
-                    </div>
-                    <input
-                      type="text"
-                      id="invoice_number"
-                      name="invoice_number"
-                      value={formData.invoice_number}
-                      onChange={handleInputChange}
-                      className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F97316] focus:border-transparent"
-                    />
-                  </div>
-                </div>
+
                 <div>
                   <label htmlFor="issue_date" className="block text-sm font-medium text-gray-700 mb-1">
                     Issue Date
@@ -359,7 +342,7 @@ const AddInvoicePage = () => {
                   <tbody className="divide-y divide-gray-100">
                     {formData.items.map((item) => (
                       <tr key={item.id} className="bg-white">
-                        <td className="py-3">
+                        <td className="px-2 py-3">
                           <input
                             type="text"
                             value={item.description}

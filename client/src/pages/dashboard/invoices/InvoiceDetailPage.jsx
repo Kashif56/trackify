@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { PDFDownloadLink, PDFViewer, pdf } from '@react-pdf/renderer';
 import { saveAs } from 'file-saver';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, Edit, Download, Printer, Send, 
-  CheckCircle, AlertCircle, Lock, CreditCard, Copy, Share2
+  CheckCircle, AlertCircle, Lock, CreditCard, Copy, Share2,
+  MoreVertical
 } from 'lucide-react';
 import PaymentModal from '../../../components/Payment/PaymentModal';
 import { toast } from 'react-toastify';
@@ -43,6 +44,27 @@ const InvoiceDetailPage = () => {
   const [hasPaymentGateway, setHasPaymentGateway] = useState(false);
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [paymentError, setPaymentError] = useState(null);
+  const [showActionMenu, setShowActionMenu] = useState(false);
+  const menuRef = useRef(null);
+
+  // Click outside handler to close the action menu
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowActionMenu(false);
+      }
+    }
+    
+    // Add event listener when the menu is open
+    if (showActionMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    
+    // Clean up the event listener
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showActionMenu]);
 
   // Check if invoice user has payment gateway configured
   useEffect(() => {
@@ -94,6 +116,20 @@ const InvoiceDetailPage = () => {
       // Update the invoice in state
       setInvoice(prev => ({ ...prev, status: 'paid' }));
       toast.success(`Invoice ${invoice.invoice_number} marked as paid`);
+    } catch (err) {
+      toast.error(err.message || 'Failed to update invoice status');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleMarkAsUnpaid = async () => {
+    try {
+      setLoading(true);
+      await invoiceService.updateInvoice(id, { status: 'unpaid' });
+      // Update the invoice in state
+      setInvoice(prev => ({ ...prev, status: 'unpaid' }));
+      toast.success(`Invoice ${invoice.invoice_number} marked as unpaid`);
     } catch (err) {
       toast.error(err.message || 'Failed to update invoice status');
     } finally {
@@ -250,62 +286,103 @@ const InvoiceDetailPage = () => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-wrap gap-3">
-              {invoice.status !== 'paid' && (
-                <button
-                  onClick={handleMarkAsPaid}
-                  className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-md transition-colors flex items-center"
-                  aria-label="Mark invoice as paid"
-                >
-                  <CheckCircle className="w-4 h-4 mr-2" />
-                  Mark as Paid
-                </button>
-              )}
-              {invoice.status !== 'paid' && (
-                <button
-                  onClick={handleSharePaymentLink}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md transition-colors flex items-center"
-                  aria-label="Share Invoice link"
-                >
-                  <CreditCard className="w-4 h-4 mr-2" />
-                  Share Invoice Link
-                </button>
-              )}
-              {invoice.status !== 'paid' && (
-                <button
-                  onClick={handleSendReminder}
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-md transition-colors flex items-center"
-                  aria-label="Send payment reminder"
-                >
-                  <Send className="w-4 h-4 mr-2" />
-                  Send Reminder
-                </button>
-              )}
+            <div className="relative" ref={menuRef}>
               <button
-                onClick={() => navigate(`/invoices/edit/${invoice.id}`)}
-                className="px-4 py-2 bg-[#F97316] hover:bg-[#EA580C] text-white font-semibold rounded-md transition-colors flex items-center"
-                aria-label="Edit invoice"
+                onClick={() => setShowActionMenu(!showActionMenu)}
+                className="p-3 rounded-full hover:bg-gray-100 transition-colors"
+                aria-label="More actions"
               >
-                <Edit className="w-4 h-4 mr-2" />
-                Edit
+                <MoreVertical className="w-7 h-7 text-gray-700" strokeWidth={2.5} />
               </button>
-              <button
-                onClick={handleDownload}
-                disabled={generatingPDF}
-                className={`px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 font-medium transition-colors flex items-center ${generatingPDF ? 'opacity-50 cursor-not-allowed' : ''}`}
-                aria-label="Download invoice as PDF"
-              >
-                <Download className={`w-4 h-4 mr-2 ${generatingPDF ? 'animate-pulse' : ''}`} />
-                {generatingPDF ? 'Generating PDF...' : 'Download PDF'}
-              </button>
-              <button
-                onClick={handlePrint}
-                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 font-medium transition-colors flex items-center"
-                aria-label="Print invoice"
-              >
-                <Printer className="w-4 h-4 mr-2" />
-                Print
-              </button>
+              
+              {showActionMenu && (
+                <div className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                  <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                    {/* Status change actions */}
+                    {(invoice.status === 'unpaid' || invoice.status === 'overdue') && (
+                      <button
+                        onClick={() => {
+                          handleMarkAsPaid();
+                          setShowActionMenu(false);
+                        }}
+                        className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        role="menuitem"
+                      >
+                        <CheckCircle className="w-4 h-4 mr-3 text-green-500" />
+                        Mark as Paid
+                      </button>
+                    )}
+                    {invoice.status === 'paid' && (
+                      <button
+                        onClick={() => {
+                          handleMarkAsUnpaid();
+                          setShowActionMenu(false);
+                        }}
+                        className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        role="menuitem"
+                      >
+                        <CreditCard className="w-4 h-4 mr-3 text-blue-500" />
+                        Mark as Unpaid
+                      </button>
+                    )}
+                    
+                    {/* Sharing actions */}
+                    {invoice.status !== 'paid' && (
+                      <button
+                        onClick={() => {
+                          handleSharePaymentLink();
+                          setShowActionMenu(false);
+                        }}
+                        className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        role="menuitem"
+                      >
+                        <Share2 className="w-4 h-4 mr-3 text-blue-500" />
+                        Share Invoice Link
+                      </button>
+                    )}
+                    
+                    {/* Edit action */}
+                    <button
+                      onClick={() => {
+                        navigate(`/invoices/edit/${invoice.id}`);
+                        setShowActionMenu(false);
+                      }}
+                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      role="menuitem"
+                    >
+                      <Edit className="w-4 h-4 mr-3 text-orange-500" />
+                      Edit Invoice
+                    </button>
+                    
+                    {/* Download action */}
+                    <button
+                      onClick={() => {
+                        handleDownload();
+                        setShowActionMenu(false);
+                      }}
+                      disabled={generatingPDF}
+                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                      role="menuitem"
+                    >
+                      <Download className={`w-4 h-4 mr-3 text-gray-500 ${generatingPDF ? 'animate-pulse' : ''}`} />
+                      {generatingPDF ? 'Generating PDF...' : 'Download PDF'}
+                    </button>
+                    
+                    {/* Print action */}
+                    <button
+                      onClick={() => {
+                        handlePrint();
+                        setShowActionMenu(false);
+                      }}
+                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      role="menuitem"
+                    >
+                      <Printer className="w-4 h-4 mr-3 text-gray-500" />
+                      Print
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

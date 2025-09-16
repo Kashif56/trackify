@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
+import DateRangeSelector from '../../../components/DateRange/DateRangeSelector';
 
 // Import components and services
 import StatCard from '../../../components/Dashboard/StatCard';
@@ -47,8 +48,13 @@ const InvoicesPage = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [dateRange, setDateRange] = useState({
+    start_date: '',
+    end_date: '',
+    range_type: 'last_30_days'
+  });
   
-  // Fetch invoices on component mount
+  // Fetch invoices when filters change
   useEffect(() => {
     const fetchInvoices = async () => {
       try {
@@ -64,6 +70,13 @@ const InvoicesPage = () => {
           params.search = searchTerm;
         }
         
+        // Add date range parameters if they exist
+        if (dateRange.start_date && dateRange.end_date) {
+          params.start_date = dateRange.start_date;
+          params.end_date = dateRange.end_date;
+          params.range_type = dateRange.range_type;
+        }
+        
         const data = await invoiceService.getInvoices(params);
         setInvoices(data.results || data);
         setError(null);
@@ -76,7 +89,7 @@ const InvoicesPage = () => {
     };
     
     fetchInvoices();
-  }, [statusFilter, searchTerm]);  // Re-fetch when filters change
+  }, [statusFilter, searchTerm, dateRange]);  // Re-fetch when filters or date range change
 
   // Filter invoices based on search term and status
   const filteredInvoices = invoices.filter(invoice => {
@@ -112,6 +125,12 @@ const InvoicesPage = () => {
   const handleDownloadInvoice = (invoice) => {
     // This would be implemented with a PDF generation library
     toast.info(`Downloading invoice ${invoice.invoice_number}...`);
+  };
+  
+  // Handle date range change from DateRangeSelector
+  const handleDateRangeChange = (newDateRange) => {
+    setDateRange(newDateRange);
+    // The useEffect will automatically trigger a re-fetch
   };
 
   const confirmDeleteInvoice = async () => {
@@ -219,6 +238,9 @@ const InvoicesPage = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+          </div>
+          <div className="flex-shrink-0">
+            <DateRangeSelector onDateRangeChange={handleDateRangeChange} />
           </div>
           <div className="flex flex-wrap gap-2">
             <button

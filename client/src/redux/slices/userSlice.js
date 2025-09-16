@@ -11,9 +11,20 @@ try {
   console.error('Error parsing user data from localStorage:', error);
 }
 
+let user_preferences = {};
+try {
+  const userData = localStorage.getItem('user_preferences');
+  if (userData) {
+    user_preferences = JSON.parse(userData);
+  }
+} catch (error) {
+  console.error('Error parsing user data from localStorage:', error);
+}
+
 const initialState = {
   user: storedUser,
   isAuthenticated: !!localStorage.getItem('access_token'),
+  user_preferences: user_preferences,
   isLoading: false,
   error: null,
   tokens: {
@@ -110,6 +121,15 @@ const userSlice = createSlice({
         localStorage.setItem('user', JSON.stringify(updatedUser));
       }
     },
+
+    updateUserPreferences: (state, action) => {
+      state.user_preferences = {
+        ...state.user_preferences,
+        ...action.payload
+      };
+      // If profile is updated, also update the localStorage
+      localStorage.setItem('user_preferences', JSON.stringify(state.user_preferences));
+    },
   },
 });
 
@@ -129,6 +149,7 @@ export const {
   updateProfile,
   updateBankAccount,
   deleteBankAccount,
+  updateUserPreferences
 } = userSlice.actions;
 
 export default userSlice.reducer;
