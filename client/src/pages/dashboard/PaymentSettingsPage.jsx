@@ -137,7 +137,7 @@ const PaymentSettingsPage = () => {
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-xl font-bold text-gray-800 flex items-center">
               <span className="bg-[#F97316] bg-opacity-10 p-2 rounded-lg mr-3">
-                <CreditCard className="h-5 w-5 text-[#F97316]" />
+                <CreditCard className="h-5 w-5 text-neutral-100" />
               </span>
               Bank Account Details
             </h3>
@@ -169,7 +169,7 @@ const PaymentSettingsPage = () => {
         <div className="bg-white border border-gray-200 shadow-sm rounded-2xl p-8">
           <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
             <span className="bg-[#F97316] bg-opacity-10 p-2 rounded-lg mr-3">
-              <CreditCard className="h-5 w-5 text-[#F97316]" />
+              <CreditCard className="h-5 w-5 text-neutral-100" />
             </span>
             Payment Gateway Settings
           </h3>

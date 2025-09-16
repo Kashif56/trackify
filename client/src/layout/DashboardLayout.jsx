@@ -7,7 +7,7 @@ import {
   Menu, X, ChevronDown, Sun, Moon, 
   Home, FileText, DollarSign, Users, 
   Settings, LogOut, BarChart2,
-  ChevronLeft, ChevronRight, CreditCard, LayoutDashboard
+  ChevronLeft, ChevronRight, CreditCard, LayoutDashboard, WalletCards
 } from 'lucide-react';
 import logo from '../assets/logo.svg';
 
@@ -98,7 +98,7 @@ const Navbar = ({ toggleSidebar, isSidebarCollapsed }) => {
                  
                   <button
                     onClick={handleLogout}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="block w-full text-left px-4 py-2 text-sm text-red-500 font-medium hover:text-red-800 cursor-pointer"
                   >
                     Sign out
                   </button>
@@ -122,7 +122,7 @@ const Sidebar = ({ isCollapsed }) => {
     { name: 'Expenses', href: '/expenses', icon: DollarSign },
     { name: 'Clients', href: '/clients', icon: Users },
     { name: 'Payments History', href: '/payments', icon: CreditCard },
-    { name: 'Payment Settings', href: '/payment-settings', icon: CreditCard },
+    { name: 'Payment Settings', href: '/payment-settings', icon: WalletCards },
     { name: 'Analytics', href: '/analytics', icon: BarChart2 },
   ];
 
