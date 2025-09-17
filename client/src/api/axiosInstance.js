@@ -2,6 +2,7 @@ import axios from 'axios';
 import store from '../redux/store';
 import { updateTokens, logout } from '../redux/slices/userSlice';
 import Cookies from 'js-cookie';
+import { toast } from 'react-toastify';
 
 // const BASE_URL = 'https://trackifye.up.railway.app/api';
 
@@ -39,7 +40,7 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Response interceptor to handle token refresh
+// Response interceptor to handle token refresh and errors
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -55,6 +56,7 @@ axiosInstance.interceptors.response.use(
         if (!refreshToken) {
           // No refresh token available, logout user
           store.dispatch(logout());
+          toast.error('Your session has expired. Please log in again.');
           return Promise.reject(error);
         }
         
@@ -72,8 +74,50 @@ axiosInstance.interceptors.response.use(
       } catch (refreshError) {
         // If refresh token is invalid, logout user
         store.dispatch(logout());
+        toast.error('Your session has expired. Please log in again.');
         return Promise.reject(refreshError);
       }
+    }
+    
+    // Handle specific error types with appropriate messages
+    if (error.response) {
+      // The request was made and the server responded with a status code outside of 2xx range
+      const { status } = error.response;
+      
+      // Don't show error toast for 401 errors as they're handled above
+      if (status !== 401) {
+        switch (status) {
+          case 403:
+            // Forbidden - user doesn't have permission
+            toast.error('You don\'t have permission to perform this action.');
+            break;
+          case 404:
+            // Not found - resource doesn't exist
+            // Don't show toast here as it might be a normal flow in some cases
+            break;
+          case 422:
+            // Validation error
+            toast.error('Please check your input and try again.');
+            break;
+          case 500:
+          case 502:
+          case 503:
+            toast.error('Server error. Our team has been notified.');
+            // Here you could add server-side error logging
+            break;
+          default:
+            // Only show generic error for other status codes
+            if (status >= 400) {
+              toast.error('Something went wrong. Please try again later.');
+            }
+        }
+      }
+    } else if (error.request) {
+      // The request was made but no response was received
+      toast.error('Network error. Please check your internet connection.');
+    } else {
+      // Something happened in setting up the request
+      console.error('Error setting up request:', error.message);
     }
     
     return Promise.reject(error);

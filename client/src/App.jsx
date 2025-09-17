@@ -1,8 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
+
+// Error Handling Components
+import ErrorBoundary from './components/errors/ErrorBoundary';
+import NotFoundPage from './pages/errors/NotFoundPage';
 
 // Test Components
 import InvoiceTemplateTest from './components/Dashboard/InvoiceTemplateTest';
@@ -41,15 +45,35 @@ const ProtectedRoute = ({ children }) => {
   return tokens ? children : <Navigate to="/login" />;
 };
 
+// Error Protected Route Component
+const ErrorProtectedRoute = ({ children }) => {
+  const { tokens } = useSelector((state) => state.user);
+  return tokens ? (
+    <ErrorBoundary>
+      {children}
+    </ErrorBoundary>
+  ) : (
+    <Navigate to="/login" />
+  );
+};
+
+// Loading Fallback Component
+const LoadingFallback = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
+  </div>
+);
+
 function App() {
   return (
     <>
       <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
-      <Routes>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
         {/* Public Routes */}
         <Route path="/" element={<LandingPage />} />
-        <Route path="/features" element={<FeaturesPage />} />
-        <Route path="/pricing" element={<PricingPage />} />
+       
         
         {/* Auth Routes */}
         <Route path="/login" element={<Login />} />
@@ -58,78 +82,82 @@ function App() {
         
         {/* Protected Routes */}
         <Route path="/dashboard" element={
-          <ProtectedRoute>
+          <ErrorProtectedRoute>
             <Dashboard />
-          </ProtectedRoute>
+          </ErrorProtectedRoute>
         } />
         <Route path="/expenses" element={
-          <ProtectedRoute>
+          <ErrorProtectedRoute>
             <ExpensesPage />
-          </ProtectedRoute>
+          </ErrorProtectedRoute>
         } />
         
         {/* Clients Route */}
         <Route path="/clients" element={
-          <ProtectedRoute>
+          <ErrorProtectedRoute>
             <ClientsPage />
-          </ProtectedRoute>
+          </ErrorProtectedRoute>
         } />
         
         {/* Analytics Route */}
         <Route path="/analytics" element={
-          <ProtectedRoute>
+          <ErrorProtectedRoute>
             <AnalyticsPage />
-          </ProtectedRoute>
+          </ErrorProtectedRoute>
         } />
         
         {/* Invoice Routes */}
         <Route path="/invoices" element={
-          <ProtectedRoute>
+          <ErrorProtectedRoute>
             <InvoicesPage />
-          </ProtectedRoute>
+          </ErrorProtectedRoute>
         } />
         <Route path="/invoices/add" element={
-          <ProtectedRoute>
+          <ErrorProtectedRoute>
             <AddInvoicePage />
-          </ProtectedRoute>
+          </ErrorProtectedRoute>
         } />
         <Route path="/invoices/:id" element={
-          <ProtectedRoute>
+          <ErrorProtectedRoute>
             <InvoiceDetailPage />
-          </ProtectedRoute>
+          </ErrorProtectedRoute>
         } />
         <Route path="/invoices/edit/:id" element={
-          <ProtectedRoute>
+          <ErrorProtectedRoute>
             <EditInvoicePage />
-          </ProtectedRoute>
+          </ErrorProtectedRoute>
         } />
         
         {/* Profile Route */}
         <Route path="/profile" element={
-          <ProtectedRoute>
+          <ErrorProtectedRoute>
             <ProfilePage />
-          </ProtectedRoute>
+          </ErrorProtectedRoute>
         } />
         
       
         
         {/* Payment Settings Route */}
         <Route path="/payment-settings" element={
-          <ProtectedRoute>
+          <ErrorProtectedRoute>
             <PaymentSettingsPage />
-          </ProtectedRoute>
+          </ErrorProtectedRoute>
         } />
         
         {/* Payment Routes */}
         <Route path="/payments" element={
-          <ProtectedRoute>
+          <ErrorProtectedRoute>
             <PaymentHistory />
-          </ProtectedRoute>
+          </ErrorProtectedRoute>
         } />
       
         
        
-      </Routes>
+            {/* 404 Route - Must be last */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Suspense>
+      </ErrorBoundary>
     </>
   );
 }
