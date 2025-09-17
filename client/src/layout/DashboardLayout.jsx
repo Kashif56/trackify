@@ -76,8 +76,8 @@ const Navbar = ({ toggleSidebar, isSidebarCollapsed }) => {
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
               >
                 <span className="sr-only">Open user menu</span>
-                {user?.profile_picture ? (
-                  <img className="w-8 h-8 rounded-full" src={user.profile_picture} alt="user photo" />
+                {user?.profile?.profile_picture ? (
+                  <img className="w-10 h-10 rounded-full cursor-pointer object-cover" src={user.profile.profile_picture} alt="user photo" />
                 ) : (
                   <div className="w-8 h-8 rounded-full bg-[#F97316] flex items-center justify-center text-white font-medium">
                     {user?.first_name?.[0] || user?.username?.[0] || 'U'}

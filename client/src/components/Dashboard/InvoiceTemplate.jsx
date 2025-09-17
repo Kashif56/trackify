@@ -195,9 +195,9 @@ const InvoiceTemplate = ({
                 Company Logo
               </div>
             )}
-            <p className={`font-medium ${theme.text}`}>{user?.profile?.company_name || invoice.user.profile.company_name}</p>
-            <p className={`${theme.textSecondary} text-sm`}>{user?.email || invoice.user.email}</p>
-            <p className={`${theme.textSecondary} text-sm`}>{user?.profile?.address || invoice.user.profile.address}</p>
+            <p className={`font-medium ${theme.text}`}>{user?.company_name || invoice?.user?.profile?.company_name}</p>
+            <p className={`${theme.textSecondary} text-sm`}>{user?.email || invoice?.user?.email}</p>
+            <p className={`${theme.textSecondary} text-sm`}>{user?.profile?.address || invoice?.user?.profile?.address}</p>
           </div>
         </div>
         

@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 50,
     objectFit: 'contain',
+    textAlign: 'right'
   },
   invoiceTitle: {
     fontSize: 24,
@@ -203,10 +204,10 @@ const styles = StyleSheet.create({
   
   status: {
     position: 'absolute',
-    top: 40,
+    top: 45,
     right: 30,
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: 'normal',
     opacity: 1,
     color: '#dc2626',
   },
@@ -232,6 +233,8 @@ const InvoicePDF = ({ invoice, user, client, bankDetails }) => {
   const currencyCode = user?.profile?.currency === 'pkr' ? 'PKR' : 'USD';
   // Calculate subtotal
   const subtotal = invoice.items.reduce((sum, item) => sum + (item.quantity * item.unit_price), 0);
+
+ 
   
   // Calculate tax amount
   const taxAmount = subtotal * (invoice.tax_rate / 100);
@@ -259,7 +262,7 @@ const InvoicePDF = ({ invoice, user, client, bankDetails }) => {
             <Text style={styles.invoiceNumber}>#{invoice.invoice_number}</Text>
             <Text style={[styles.status, { color: getStatusColor(invoice.status) }]}>{invoice.status.toUpperCase()}</Text>
           </View>
-          <View style={{ alignItems: 'flex-end' }}>
+          <View style={{ alignItems: 'flex-end', justifyContent: 'flex-end' }}>
             {user?.profile_picture && (
                 <Image
                     src={user.profile_picture}
@@ -369,11 +372,11 @@ const InvoicePDF = ({ invoice, user, client, bankDetails }) => {
             {bankDetails && (
               <View style={[styles.bankDetails, styles.sectionBox]}>
                 <Text style={styles.bankDetailsTitle}>Bank Details</Text>
-                <Text>Account Name: {bankDetails.accountName}</Text>
-                <Text>Account Number: {bankDetails.accountNumber}</Text>
-                <Text>Bank Name: {bankDetails.bankName}</Text>
-                {bankDetails.swiftCode && <Text>Swift Code: {bankDetails.swiftCode}</Text>}
-                {bankDetails.routingNumber && <Text>Routing Number: {bankDetails.routingNumber}</Text>}
+                <Text>Account Name: {bankDetails.account_holder_name}</Text>
+                <Text>IBAN Number: {bankDetails.iban_number}</Text>
+                <Text>Bank Name: {bankDetails.bank_name}</Text>
+                {bankDetails.swift_code && <Text>Swift Code: {bankDetails.swift_code}</Text>}
+                {bankDetails.ifsc_code && <Text>IFSC Code: {bankDetails.ifsc_code}</Text>}
               </View>
             )}
             

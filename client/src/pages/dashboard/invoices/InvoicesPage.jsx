@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
   Plus, Search, Filter, Calendar, DollarSign, FileText, AlertCircle, 
-  ChevronLeft, ChevronRight
+  ChevronLeft, ChevronRight, X
 } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
@@ -91,11 +91,21 @@ const InvoicesPage = () => {
     fetchInvoices();
   }, [statusFilter, searchTerm, dateRange]);  // Re-fetch when filters or date range change
 
+
   // Filter invoices based on search term and status
   const filteredInvoices = invoices.filter(invoice => {
-    const matchesSearch = 
-      invoice.invoice_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      invoice.client.name.toLowerCase().includes(searchTerm.toLowerCase());
+    // Convert search term to lowercase for case-insensitive comparison
+    const search = searchTerm.toLowerCase();
+    
+    // Make sure invoice_number and client_name exist and are strings before using includes
+    const matchesInvoiceNumber = invoice.invoice_number && 
+      invoice.invoice_number.toLowerCase().includes(search);
+    
+    const matchesClientName = invoice.client_name && 
+      invoice.client_name.toLowerCase().includes(search);
+    
+    // Add additional search fields if needed
+    const matchesSearch = matchesInvoiceNumber || matchesClientName || search === '';
     
     const matchesStatus = statusFilter === 'all' || invoice.status === statusFilter;
     
@@ -233,11 +243,21 @@ const InvoicesPage = () => {
             </div>
             <input
               type="text"
-              className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F97316] focus:border-transparent"
+              className="block w-full pl-10 pr-10 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F97316] focus:border-transparent"
               placeholder="Search invoices by number or client..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              aria-label="Search invoices"
             />
+            {searchTerm && (
+              <button
+                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                onClick={() => setSearchTerm('')}
+                aria-label="Clear search"
+              >
+                <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+              </button>
+            )}
           </div>
           <div className="flex-shrink-0">
             <DateRangeSelector onDateRangeChange={handleDateRangeChange} />

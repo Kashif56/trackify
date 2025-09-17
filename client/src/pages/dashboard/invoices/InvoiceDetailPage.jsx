@@ -47,6 +47,9 @@ const InvoiceDetailPage = () => {
   const [showActionMenu, setShowActionMenu] = useState(false);
   const menuRef = useRef(null);
 
+    // Get current user from Redux store
+  const { user, isAuthenticated } = useSelector((state) => state.user);
+
   // Click outside handler to close the action menu
   useEffect(() => {
     function handleClickOutside(event) {
@@ -91,8 +94,7 @@ const InvoiceDetailPage = () => {
       try {
         setLoading(true);
         const data = await invoiceService.getInvoiceById(id);
-        console.log('Invoice data:', data);
-        console.log('Invoice user data:', data.user);
+
         setInvoice(data);
         setError(null);
       } catch (err) {
@@ -194,11 +196,11 @@ const InvoiceDetailPage = () => {
           user={invoice.user} 
           client={invoice.client_details}
           bankDetails={{
-            accountName: invoice.user?.company_name || 'Your Company Account',
-            accountNumber: invoice.user?.bank_account || 'XXXX-XXXX-XXXX-XXXX',
-            bankName: invoice.user?.bank_name || 'Your Bank Name',
-            swiftCode: invoice.user?.swift_code || 'SWIFTCODE',
-            routingNumber: invoice.user?.routing_number || '123456789'
+            account_holder_name: user?.bank_account.account_holder_name || '',
+            iban_number: user?.bank_account.iban_number || '',
+            bank_name: user?.bank_account.bank_name || '',
+            swift_code: user?.bank_account.swift_code || '',
+            routing_number: user?.bank_account.routing_number || ''
           }}
         />
       ).toBlob();
@@ -222,8 +224,9 @@ const InvoiceDetailPage = () => {
   // Get user preferences for dark mode
   const darkMode = false
   
-  // Get current user from Redux store
-  const { user, isAuthenticated } = useSelector((state) => state.user);
+
+
+  
   
   // Check if the current user is the owner of the invoice
   const isOwner = user && invoice && user.id === invoice.user.id;
@@ -392,8 +395,8 @@ const InvoiceDetailPage = () => {
               invoice={invoice}
               user={invoice.user}
               client={invoice.client_details}
-              darkMode={darkMode}
-              showThemeToggle={true}
+              darkMode={false}
+              showThemeToggle={false}
               actions={null}
             />
           </div>
