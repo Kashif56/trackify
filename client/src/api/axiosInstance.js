@@ -4,9 +4,9 @@ import { updateTokens, logout } from '../redux/slices/userSlice';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
 
-// const BASE_URL = 'https://trackifye.up.railway.app/api';
+const BASE_URL = 'https://trackifye.up.railway.app/api';
 
-const BASE_URL = 'http://localhost:8000/api';
+// const BASE_URL = 'http://localhost:8000/api';
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
