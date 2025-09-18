@@ -16,7 +16,7 @@ const Login = () => {
   const { tokens } = useSelector((state) => state.user);
   
   const [formData, setFormData] = useState({
-    email: '',
+    email_or_username: '',
     password: '',
   });
   
@@ -36,8 +36,8 @@ const Login = () => {
     const errors = {};
     
     // Email validation
-    if (!formData.email) {
-      errors.email = 'Email is required';
+    if (!formData.email_or_username) {
+      errors.email_or_username = 'Email or username is required';
     }
     
     // Password validation
@@ -77,14 +77,14 @@ const Login = () => {
   };
   
   const handleResendVerification = async () => {
-    if (!formData.email) {
-      setFormErrors({ ...formErrors, email: 'Email is required to resend verification' });
+    if (!formData.email_or_username) {
+      setFormErrors({ ...formErrors, email_or_username: 'Email or username is required to resend verification' });
       return;
     }
     
     try {
-      await authApi.resendVerification(formData.email);
-      toast.success('If your email exists in our system, a verification link has been sent.');
+      await authApi.resendVerification(formData.email_or_username);
+      toast.success('If your email or username exists in our system, a verification link has been sent.');
     } catch (error) {
       toast.error('Failed to resend verification email. Please try again later.');
     }
@@ -112,14 +112,14 @@ const Login = () => {
         
         <form className="space-y-6" onSubmit={handleSubmit}>
           <Input
-            id="email"
-            name="email"
-            label="Email Address"
-            type="email"
+            id="email_or_username"
+            name="email_or_username"
+            label="Email Address or Username"
+            type="text"
             autoComplete="email"
-            value={formData.email}
+            value={formData.email_or_username}
             onChange={handleChange}
-            error={formErrors.email}
+            error={formErrors.email_or_username}
             required
             placeholder="Enter your email address"
           />
@@ -155,15 +155,7 @@ const Login = () => {
           </div>
           
           <div>
-            <Button
-              type="submit"
-              variant="primary"
-              fullWidth
-              isLoading={isLoading}
-              disabled={isLoading}
-            >
-              Sign In
-            </Button>
+            <button type="submit" className="bg-primary text-white px-4 py-2 w-full rounded-md font-medium cursor-pointer">Sign In</button>
           </div>
         </form>
         

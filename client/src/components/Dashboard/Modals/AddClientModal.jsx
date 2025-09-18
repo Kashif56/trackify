@@ -59,6 +59,19 @@ const AddClientModal = ({ isOpen, onClose, onClientAdded }) => {
       if (onClientAdded) {
         onClientAdded(newClient);
       }
+
+      setFormData({
+        name: '',
+        email: '',
+        phone_number: '',
+        address: '',
+        city: '',
+        state: '',
+        zip_code: '',
+        country: '',
+        company_name: '',
+        notes: ''
+      });
       
       // Close the modal
       onClose();

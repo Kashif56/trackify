@@ -200,14 +200,6 @@ const EditInvoicePage = () => {
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
     
-    // Validate form
-    if (!formData.client_id) {
-      toast.error("Please select a client");
-      // Scroll to client selection
-      document.getElementById('client_id')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      return;
-    }
-    
     if (formData.items.some(item => !item.description || item.price <= 0)) {
       toast.error("All items must have a description and price");
       return;

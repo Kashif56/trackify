@@ -82,17 +82,17 @@ def login_user(request):
     """
     Authenticate a user and return tokens if email is verified
     """
-    email = request.data.get('email')
+    email_or_username = request.data.get('email_or_username')
     password = request.data.get('password')
     
     # Validate input
-    if not email or not password:
+    if not email_or_username or not password:
         return Response({
-            'error': 'Please provide both email and password'
+            'error': 'Please provide both email or username and password'
         }, status=status.HTTP_400_BAD_REQUEST)
     
     try:
-        user = User.objects.get(email=email)
+        user = User.objects.get(Q(email=email_or_username) | Q(username=email_or_username))
     except User.DoesNotExist:
         return Response({
             'error': 'Invalid credentials'

@@ -12,7 +12,6 @@ import { authCarouselSlides } from '../../components/auth/carouselData';
 const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isLoading, error } = useSelector((state) => state.user);
   const { tokens } = useSelector((state) => state.user);
   
   const [formData, setFormData] = useState({
@@ -203,15 +202,7 @@ const Register = () => {
           />
           
           <div>
-            <Button
-              type="submit"
-              variant="primary"
-              fullWidth
-              isLoading={isLoading}
-              disabled={isLoading}
-            >
-              Sign Up
-            </Button>
+          <button type="submit" className="mt-4 bg-primary text-white px-4 py-2 w-full rounded-md font-medium cursor-pointer">Sign Up</button>
           </div>
         </form>
         
