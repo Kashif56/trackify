@@ -141,13 +141,6 @@ const InvoicesTable = ({
                         <Edit className="w-4 h-4" />
                       </button>
                       <button
-                        onClick={() => onDownloadInvoice && onDownloadInvoice(invoice)}
-                        className="text-green-600 hover:text-green-800 p-1 rounded-full hover:bg-green-50 transition-colors duration-200"
-                        title="Download Invoice"
-                      >
-                        <Download className="w-4 h-4" />
-                      </button>
-                      <button
                         onClick={() => onDeleteInvoice && onDeleteInvoice(invoice)}
                         className="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-50 transition-colors duration-200"
                         title="Delete Invoice"

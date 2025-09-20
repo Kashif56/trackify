@@ -31,6 +31,7 @@ const InvoiceTemplate = ({
   
   // Get user's currency preference from Redux store
   const reduxUser = useSelector(state => state.user.user);
+  console.log("reduxUser on InvoiceTemplate", reduxUser);
   const userCurrency = reduxUser?.profile?.currency || 'pkr';
   const currencySymbol = userCurrency === 'pkr' ? 'Rs ' : '$';
   
@@ -182,10 +183,10 @@ const InvoiceTemplate = ({
             )}
           </div>
           <div className="text-right">
-            {user?.profile_picture ? (
+            {reduxUser?.profile_picture ? (
               <div className="h-24 w-auto mb-2 rounded-md overflow-hidden flex items-center justify-end">
                 <img 
-                  src={user.profile_picture} 
+                  src={reduxUser.profile_picture} 
                   alt="Company Logo" 
                   className="h-full w-auto object-contain"
                 />

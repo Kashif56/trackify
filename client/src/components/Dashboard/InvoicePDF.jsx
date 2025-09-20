@@ -1,6 +1,7 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { format } from 'date-fns';
+import { useSelector } from 'react-redux';
 
 // Create styles
 const styles = StyleSheet.create({
@@ -229,8 +230,10 @@ const formatDate = (dateString) => {
 
 // Invoice PDF Document
 const InvoicePDF = ({ invoice, user, client, bankDetails }) => {
+
+  const reduxUser = useSelector((state) => state.auth.user);
   // Get user's currency preference
-  const currencyCode = user?.profile?.currency === 'pkr' ? 'PKR' : 'USD';
+  const currencyCode = reduxUser?.profile?.currency === 'pkr' ? 'PKR' : 'USD';
   // Calculate subtotal
   const subtotal = invoice.items.reduce((sum, item) => sum + (item.quantity * item.unit_price), 0);
 
@@ -263,13 +266,13 @@ const InvoicePDF = ({ invoice, user, client, bankDetails }) => {
             <Text style={[styles.status, { color: getStatusColor(invoice.status) }]}>{invoice.status.toUpperCase()}</Text>
           </View>
           <View style={{ alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-            {user?.profile_picture && (
+            {reduxUser?.profile_picture && (
                 <Image
-                    src={user.profile_picture}
+                    src={reduxUser.profile_picture}
                     style={styles.logo}
                 />
                 )}
-            {user?.company_name && (
+            {reduxUser?.company_name && (
               <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5 }}> 
                 {user.company_name}
               </Text>
@@ -412,6 +415,7 @@ const InvoicePDF = ({ invoice, user, client, bankDetails }) => {
         {/* Footer */}
         <View style={styles.footer}>
           <Text>Thank you for your business!</Text>
+          <Text>Powered by Trackifye.com © {new Date().getFullYear()}</Text>
         </View>
       </Page>
     </Document>
