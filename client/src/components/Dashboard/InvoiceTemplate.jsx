@@ -183,10 +183,10 @@ const InvoiceTemplate = ({
             )}
           </div>
           <div className="text-right">
-            {reduxUser?.profile_picture ? (
+            {reduxUser?.profile.profile_picture ? (
               <div className="h-24 w-auto mb-2 rounded-md overflow-hidden flex items-center justify-end">
                 <img 
-                  src={reduxUser.profile_picture} 
+                  src={reduxUser.profile.profile_picture} 
                   alt="Company Logo" 
                   className="h-full w-auto object-contain"
                 />

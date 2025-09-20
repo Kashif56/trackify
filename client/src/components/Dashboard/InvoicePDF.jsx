@@ -266,13 +266,13 @@ const InvoicePDF = ({ invoice, user, client, bankDetails }) => {
             <Text style={[styles.status, { color: getStatusColor(invoice.status) }]}>{invoice.status.toUpperCase()}</Text>
           </View>
           <View style={{ alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-            {reduxUser?.profile_picture && (
+            {reduxUser?.profile.profile_picture && (
                 <Image
-                    src={reduxUser.profile_picture}
+                    src={reduxUser.profile.profile_picture}
                     style={styles.logo}
                 />
                 )}
-            {reduxUser?.company_name && (
+            {user?.company_name && (
               <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5 }}> 
                 {user.company_name}
               </Text>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Plus, Filter, Tag, DollarSign, CreditCard, TrendingUp, Calendar } from 'lucide-react';
+import { Plus, Filter, Tag, DollarSign, CreditCard, TrendingUp, Calendar, Trash2 } from 'lucide-react';
 import { toast } from 'react-toastify';
 import expenseApi from '../../api/expenseApi';
 import DateRangeSelector from '../../components/DateRange/DateRangeSelector';
@@ -200,6 +200,12 @@ const ExpensesPage = () => {
       
       setCategories(updatedCategories);
       setShowDeleteCategoryModal(false);
+      
+      // Reset the filter if the deleted category was the one being filtered
+      if (filterCategory === selectedCategory.name) {
+        setFilterCategory('');
+      }
+      
       toast.success('Category deleted successfully');
     } catch (error) {
       console.error('Error deleting category:', error);
@@ -222,6 +228,22 @@ const ExpensesPage = () => {
     setDateRange(newDateRange);
     // The useEffect will automatically trigger a re-fetch
   };
+  
+  // Handle deleting a category directly from the filter dropdown
+  const handleDeleteFilterCategory = () => {
+    // Find the category object that matches the current filter
+    const categoryToDelete = categories.find(cat => cat.name === filterCategory);
+    
+    if (!categoryToDelete) {
+      toast.error('Category not found');
+      return;
+    }
+    
+    // Set the selected category and open the delete modal
+    setSelectedCategory(categoryToDelete);
+    setShowDeleteCategoryModal(true);
+  };
+  
 
   // Filter expenses by category
   const filteredExpenses = filterCategory 
@@ -236,22 +258,35 @@ const ExpensesPage = () => {
           <h1 className="text-2xl font-semibold text-gray-900">Expenses</h1>
           <div className="mt-3 sm:mt-0 sm:flex sm:space-x-3">
             <DateRangeSelector onDateRangeChange={handleDateRangeChange} />
-            <div className="relative">
-              <select
-                className="bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary appearance-none"
-                value={filterCategory}
-                onChange={(e) => setFilterCategory(e.target.value)}
-              >
-                <option value="">All Categories</option>
-                {Array.isArray(categories) && categories.map(category => (
-                  <option key={category.id} value={category.name}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                <Filter className="h-4 w-4" />
+            <div className="flex items-center space-x-2">
+              <div className="relative">
+                <select
+                  className="bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary appearance-none"
+                  value={filterCategory}
+                  onChange={(e) => setFilterCategory(e.target.value)}
+                >
+                  <option value="">All Categories</option>
+                  {Array.isArray(categories) && categories.map(category => (
+                    <option key={category.id} value={category.name}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <Filter className="h-4 w-4" />
+                </div>
               </div>
+              
+              {/* Delete Category Button - Only visible when a category is selected */}
+              {filterCategory && (
+                <button
+                  onClick={handleDeleteFilterCategory}
+                  className="inline-flex items-center px-3 py-2 border border-red-300 rounded-md shadow-sm text-sm font-medium text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                  title="Delete this category"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              )}
             </div>
             <div className="flex space-x-2">
               <button 
