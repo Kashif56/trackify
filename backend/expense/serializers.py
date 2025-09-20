@@ -20,8 +20,13 @@ class ExpenseCategorySerializer(serializers.ModelSerializer):
 
 class ExpenseSerializer(serializers.ModelSerializer):
     """Serializer for the Expense model"""
-    category_name = serializers.CharField(source='category.name', read_only=True)
-    receipt = serializers.ImageField(use_url=True)
+    category_name = serializers.SerializerMethodField(read_only=True)
+    category = serializers.PrimaryKeyRelatedField(queryset=ExpenseCategory.objects.all(), required=False, allow_null=True)
+    receipt = serializers.ImageField(use_url=True, required=False)
+    
+    def get_category_name(self, obj):
+        """Return category name or None if category doesn't exist"""
+        return obj.category.name if obj.category else None
     
     class Meta:
         model = Expense
@@ -38,7 +43,7 @@ class ExpenseSerializer(serializers.ModelSerializer):
 
 class ExpenseDetailSerializer(serializers.ModelSerializer):
     """Serializer for detailed expense information"""
-    category = ExpenseCategorySerializer(read_only=True)
+    category = ExpenseCategorySerializer(read_only=True, required=False, allow_null=True)
     
     class Meta:
         depth = 1
