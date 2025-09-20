@@ -1,7 +1,6 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { format } from 'date-fns';
-import { useSelector } from 'react-redux';
 
 // Create styles
 const styles = StyleSheet.create({
@@ -24,7 +23,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 50,
     objectFit: 'contain',
-    textAlign: 'right'
+    marginBottom: 10,
   },
   invoiceTitle: {
     fontSize: 24,
@@ -229,11 +228,9 @@ const formatDate = (dateString) => {
 };
 
 // Invoice PDF Document
-const InvoicePDF = ({ invoice, user, client, bankDetails }) => {
-
-  const reduxUser = useSelector((state) => state.auth.user);
+const InvoicePDF = ({ invoice, user, client, bankDetails, currencyPreference = 'usd' }) => {
   // Get user's currency preference
-  const currencyCode = reduxUser?.profile?.currency === 'pkr' ? 'PKR' : 'USD';
+  const currencyCode = currencyPreference === 'pkr' ? 'PKR' : 'USD';
   // Calculate subtotal
   const subtotal = invoice.items.reduce((sum, item) => sum + (item.quantity * item.unit_price), 0);
 
@@ -266,28 +263,26 @@ const InvoicePDF = ({ invoice, user, client, bankDetails }) => {
             <Text style={[styles.status, { color: getStatusColor(invoice.status) }]}>{invoice.status.toUpperCase()}</Text>
           </View>
           <View style={{ alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-            {reduxUser?.profile.profile_picture && (
+            <View style={{ alignItems: 'flex-end', width: '100%' }}>
+              {user?.profile?.profile_picture && (
                 <Image
-                    src={reduxUser.profile.profile_picture}
-                    style={styles.logo}
+                  src={user.profile.profile_picture}
+                  style={styles.logo}
                 />
-                )}
-            {user?.company_name && (
-              <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5 }}> 
-                {user.company_name}
-              </Text>
-            )}
-            
-            <Text>
-                {user.first_name} {user.last_name}
-            </Text>
-            <Text>
+              )}
+              {user?.profile?.company_name && (
+                <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5, textAlign: 'right' }}> 
+                  {user.profile.company_name}
+                </Text>
+              )}
+              
+              <Text style={{ textAlign: 'right' }}>
                 {user.email}
-            </Text>
-            <Text>
-                {user.address}
-            </Text>
-
+              </Text>
+              <Text style={{ textAlign: 'right' }}>
+                {user.profile.address}
+              </Text>
+            </View>
           </View>
         </View>
         

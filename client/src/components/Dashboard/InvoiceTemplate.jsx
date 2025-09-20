@@ -31,7 +31,6 @@ const InvoiceTemplate = ({
   
   // Get user's currency preference from Redux store
   const reduxUser = useSelector(state => state.user.user);
-  console.log("reduxUser on InvoiceTemplate", reduxUser);
   const userCurrency = reduxUser?.profile?.currency || 'pkr';
   const currencySymbol = userCurrency === 'pkr' ? 'Rs ' : '$';
   

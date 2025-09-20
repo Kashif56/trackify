@@ -50,6 +50,8 @@ const InvoiceDetailPage = () => {
     // Get current user from Redux store
   const { user, isAuthenticated } = useSelector((state) => state.user);
 
+
+
   // Click outside handler to close the action menu
   useEffect(() => {
     function handleClickOutside(event) {
@@ -139,10 +141,6 @@ const InvoiceDetailPage = () => {
     }
   };
 
-  const handleSendReminder = () => {
-    // This would send an email reminder to the client
-    toast.success(`Reminder sent to ${invoice.client.name}`);
-  };
 
   const handleSharePaymentLink = () => {
     setShowShareModal(true);
@@ -189,26 +187,34 @@ const InvoiceDetailPage = () => {
       setGeneratingPDF(true);
       toast.info(`Preparing invoice ${invoice.invoice_number} for download...`);
       
+      // Prepare bank details
+      const bankDetailsObj = {
+        account_holder_name: user?.bank_account?.account_holder_name || '',
+        iban_number: user?.bank_account?.iban_number || '',
+        bank_name: user?.bank_account?.bank_name || '',
+        swift_code: user?.bank_account?.swift_code || '',
+        routing_number: user?.bank_account?.routing_number || ''
+      };
+      
+      // Get currency preference
+      const currencyPreference = user?.profile?.currency || 'usd';
+
+  
+      
       // Generate PDF blob
       const blob = await pdf(
         <InvoicePDF 
           invoice={invoice} 
-          user={invoice.user} 
+          user={user} 
           client={invoice.client_details}
-          bankDetails={{
-            account_holder_name: user?.bank_account.account_holder_name || '',
-            iban_number: user?.bank_account.iban_number || '',
-            bank_name: user?.bank_account.bank_name || '',
-            swift_code: user?.bank_account.swift_code || '',
-            routing_number: user?.bank_account.routing_number || ''
-          }}
+          bankDetails={bankDetailsObj}
+          currencyPreference={currencyPreference}
         />
       ).toBlob();
       
       // Save the PDF file
       saveAs(blob, `Invoice-${invoice.invoice_number}.pdf`);
       
-
     } catch (err) {
       console.error('PDF download error:', err);
       toast.error('Failed to download invoice. Please try again.');
@@ -224,8 +230,6 @@ const InvoiceDetailPage = () => {
   // Get user preferences for dark mode
   const darkMode = false
   
-
-
   
   
   // Check if the current user is the owner of the invoice

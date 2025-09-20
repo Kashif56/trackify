@@ -53,6 +53,13 @@ class UserCreateSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         validated_data.pop('password2')
+        email = validated_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise serializers.ValidationError({"email": "Email already exists."})
+        username = validated_data.get('username')
+        if User.objects.filter(username=username).exists():
+            raise serializers.ValidationError({"username": "Username already exists."})
+        
         user = User.objects.create_user(**validated_data)
         return user
 

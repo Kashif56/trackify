@@ -11,6 +11,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import UserCreateSerializer, UserSerializer, UserProfileUpdateSerializer, UserUpdateSerializer
 from .models import UserProfile, EmailVerification
 
+from django.db.models import Q
+
 from subscription.models import Subscription
 from subscription.serializers import SubscriptionSerializer
 

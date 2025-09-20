@@ -22,7 +22,7 @@ class ExpenseSerializer(serializers.ModelSerializer):
     """Serializer for the Expense model"""
     category_name = serializers.SerializerMethodField(read_only=True)
     category = serializers.PrimaryKeyRelatedField(queryset=ExpenseCategory.objects.all(), required=False, allow_null=True)
-    receipt = serializers.ImageField(use_url=True, required=False)
+    receipt = serializers.ImageField(use_url=True, required=False, allow_null=True)
     
     def get_category_name(self, obj):
         """Return category name or None if category doesn't exist"""
@@ -44,6 +44,7 @@ class ExpenseSerializer(serializers.ModelSerializer):
 class ExpenseDetailSerializer(serializers.ModelSerializer):
     """Serializer for detailed expense information"""
     category = ExpenseCategorySerializer(read_only=True, required=False, allow_null=True)
+    receipt = serializers.ImageField(use_url=True, required=False, allow_null=True)
     
     class Meta:
         depth = 1
