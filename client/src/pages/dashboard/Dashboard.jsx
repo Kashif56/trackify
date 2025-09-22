@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { DollarSign, CreditCard, TrendingUp } from 'lucide-react';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+
 import dashboardApi from '../../api/dashboardApi';
 
 // Layout and Components
@@ -40,6 +42,8 @@ const Dashboard = () => {
     end_date: '',
     range_type: 'last_30_days'
   });
+
+  const navigate = useNavigate();
   
   const { user, tokens } = useSelector(state => state.user);
   const dispatch = useDispatch();
@@ -96,39 +100,33 @@ const Dashboard = () => {
 
   // Event handlers for invoice actions
   const handleViewInvoice = (invoice) => {
-    // Navigate to invoice detail page
-    toast.info(`Viewing invoice ${invoice.invoice_number}`);
+    navigate(`/invoice/${invoice.id}`);
   };
   
   const handleEditInvoice = (invoice) => {
-    // Navigate to invoice edit page
-    toast.info(`Editing invoice ${invoice.invoice_number}`);
+    navigate(`/invoice/${invoice.id}/edit`);
   };
   
   const handleDeleteInvoice = (invoice) => {
-    // Show confirmation dialog and delete if confirmed
-    toast.info(`Delete invoice ${invoice.invoice_number}`);
+    
   };
   
   const handleDownloadInvoice = (invoice) => {
-    // Generate and download PDF
-    toast.info(`Downloading invoice ${invoice.invoice_number}`);
+    
   };
 
   // Event handlers for expense actions
   const handleViewExpense = (expense) => {
-    // Navigate to expense detail page
-    toast.info(`Viewing expense: ${expense.description}`);
+    navigate(`/expense/${expense.id}`);
   };
   
   const handleEditExpense = (expense) => {
-    // Navigate to expense edit page
+    navigate(`/expense/${expense.id}/edit`);
     toast.info(`Editing expense: ${expense.description}`);
   };
   
   const handleDeleteExpense = (expense) => {
-    // Show confirmation dialog and delete if confirmed
-    toast.info(`Delete expense: ${expense.description}`);
+    
   };
 
   return (
