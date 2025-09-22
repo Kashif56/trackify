@@ -62,6 +62,7 @@ const InvoiceTemplate = ({
     ifsc_code: reduxUser.bank_account.ifsc_code || ''
   }
 
+
   // Use bank account from user profile if available, otherwise use provided bank details or defaults
   const displayBankDetails = user?.bank_account ? {
     account_holder_name: user.bank_account.account_holder_name || '',
