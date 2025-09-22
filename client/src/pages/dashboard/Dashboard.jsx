@@ -100,11 +100,11 @@ const Dashboard = () => {
 
   // Event handlers for invoice actions
   const handleViewInvoice = (invoice) => {
-    navigate(`/invoice/${invoice.id}`);
+    navigate(`/invoices/${invoice.id}`);
   };
   
   const handleEditInvoice = (invoice) => {
-    navigate(`/invoice/${invoice.id}/edit`);
+    navigate(`/invoices/${invoice.id}/edit`);
   };
   
   const handleDeleteInvoice = (invoice) => {
@@ -117,12 +117,11 @@ const Dashboard = () => {
 
   // Event handlers for expense actions
   const handleViewExpense = (expense) => {
-    navigate(`/expense/${expense.id}`);
+    navigate(`/expenses/${expense.id}`);
   };
   
   const handleEditExpense = (expense) => {
-    navigate(`/expense/${expense.id}/edit`);
-    toast.info(`Editing expense: ${expense.description}`);
+    navigate(`/expenses/${expense.id}/edit`);
   };
   
   const handleDeleteExpense = (expense) => {
